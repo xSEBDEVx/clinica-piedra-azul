@@ -1,0 +1,214 @@
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding: 0;
+}
+
+body {
+    background-color: #F6F8FC; 
+    font-family: 'Roboto', Arial, sans-serif; 
+    color: #202124
+}
+.pantallaCompleta{
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+.barraLateral{
+    background-color: #F6F8FC;
+    padding: 20px 0;
+}
+.logo{
+    padding-left: 25px;
+    margin-bottom: 30px;
+    color: #5F6368;
+    font-size: 22px;
+}
+.menu{
+    display: flex;
+    flex-direction: column; /* Coloca los botones uno debajo del otro */
+    gap: 2px;
+    padding-right: 15px; /* Deja espacio para que el botón no toque el contenido blanco */
+}
+.menu button{
+    text-align: left;
+    padding: 12px 25px;
+    background-color: transparent; 
+    border: none;
+    border-radius: 0 20px 20px 0; 
+    cursor: pointer;
+    font-weight: 500;
+    color: #3C4043;
+    font-size: 15px;
+    transition: background-color 0.2s;
+}
+.menu button:hover {
+    background-color: #EAECEE; 
+}
+
+.menu button.activo {
+    background-color: #D3E3FD; 
+    color: #041E49; 
+    font-weight: 700;
+}
+
+.areaPrincipal {
+    background-color: #FFFFFF;
+    margin: 10px 10px 10px 0; /* Separación arriba, abajo, derecha. Pegado a la izquierda */
+    border-radius: 24px; /* Las curvas características del nuevo Gmail */
+    padding: 40px;
+    overflow-y: auto; /* Si el texto es muy largo, solo esta zona hará scroll */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    position: relative; 
+    z-index: 1;
+}
+.areaPrincipal::before {
+    content: ""; /* Obligatorio para que el pseudo-elemento exista */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Aquí pones la ruta de tu logo */
+    background-image: url('/images/logo2.png'); 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 90%; /* Ajusta esto (ej. 30% o 70%) según qué tan grande lo quieras */
+    
+    opacity: 0.03   ; /* El nivel de transparencia. 0.05 es un 5%, ideal para marcas de agua */
+    z-index: -1; /* Lo empuja hacia el fondo, detrás del texto */
+    pointer-events: none; /* Evita que la imagen bloquee los clics a tus botones de Iniciar Sesión */
+}
+
+h1 {
+    font-size: 35px;
+    color: #202124;
+    margin-bottom: 0px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #5F6368;
+    font-weight: 400;
+}
+
+p, .presentacion {
+    font-size: 16px;
+    color: #3C4043;
+    line-height: 1.6;
+}
+
+.miFoto {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 50%;
+}
+
+.seccion-contenido {
+    display: none;
+    gap: 40px;
+    animation: aparecer 0.3s ease-in-out; 
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: auto 700px;
+    height: 100%;    
+}
+
+.seccion-contenido.activa {
+    display: grid;
+}
+
+.seccion-contenido h3 {
+    margin-bottom: 15px;
+    color: #202124;
+}
+.logoPequeMenu{
+    display: block;
+    margin: 0 auto 0px;
+    padding-left: 0;
+    max-width: 80%;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Contenedor principal del login */
+.login {
+    background-color: #FFFFFF;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #E3E3E3;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+
+.titulo-login {
+    color: #202124;
+    font-size: 20px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.subtitulo-login {
+    font-size: 14px;
+    color: #5F6368;
+    margin-bottom: 25px;
+}
+
+/* Estructura del formulario */
+.formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Separación uniforme entre los campos */
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupo-input label {
+    font-size: 14px;
+    color: #3C4043;
+    font-weight: 500;
+}
+
+/* Estilo de las cajas de texto (Inputs) */
+.grupo-input input {
+    padding: 12px 15px;
+    border: 1px solid #DADCE0; /* Borde gris clásico de Google */
+    border-radius: 8px; /* Ligeramente redondeados */
+    font-size: 15px;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #202124;
+    transition: all 0.2s ease;
+}
+
+/* Efecto cuando el usuario hace clic dentro del input (Focus) */
+.grupo-input input:focus {
+    outline: none;
+    border-color: #0081C6; /* Azul claro "Clínica" */
+    box-shadow: 0 0 0 2px rgba(0, 129, 198, 0.2); /* Resplandor azul suave */
+}
+
+/* Botón de Iniciar Sesión */
+.btn-ingresar {
+    background-color: #005092; /* Azul oscuro "Piedra Azul" */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px; /* Forma de píldora para mantener el estilo */
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.btn-ingresar:hover {
+    background-color: #003a6b; /* Un tono un poco más oscuro al pasar el ratón */
+}

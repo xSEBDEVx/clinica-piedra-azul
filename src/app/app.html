@@ -1,0 +1,49 @@
+<div class="pantallaCompleta">
+        <aside class="barraLateral">
+            <a href="index.html">
+                <img src="images/logo2.png" class="logoPequeMenu" alt="logoInicio">
+            </a>
+          <div class="menu">
+          <button (click)="cambiarSeccion('pacientes')" [class.activo]="seccionActiva === 'pacientes'">MODULO PACIENTES</button>
+          <button (click)="cambiarSeccion('administrador')" [class.activo]="seccionActiva === 'administrador'">MODULO ADMIN</button>
+          <button (click)="cambiarSeccion('agendador')" [class.activo]="seccionActiva === 'agendador'">MODULO AGENDADOR</button>
+          </div>
+        </aside>
+
+        <main class="areaPrincipal">
+            <div id="inicio" class="seccion-contenido activa" [class.activa]="seccionActiva === 'inicio'">
+                <div class="informacion">
+                    <h1>CLÍNICA PIEDRA AZUL</h1>
+                    <p>Más de 25 años brindando atención médica integral con calidad humana, tecnología avanzada y un equipo de especialistas comprometidos con tu bienestar.</p>
+                </div>
+            </div>
+
+            <div id="pacientes" class="seccion-contenido"  [class.activa]="seccionActiva === 'pacientes'">
+                <div class="informacion">
+                    <h1>MODULO PARA PACIENTES</h1>
+                    <p>Sección para pacientes, separa tus citas médicas en minutos</p>
+                </div>
+                <!-- Contenedor vacío donde JS inyectará el formulario -->
+                <app-login-form tipoUsuario="paciente"></app-login-form>
+            </div>
+
+            <div id="agendador" class="seccion-contenido" [class.activa]="seccionActiva === 'agendador'">
+                <div class="informacion">
+                    <h1>MODULO PARA AGENDADORES</h1>
+                    <p>Sección para agendadores, agenda citas médicas para pacientes</p>
+                </div>
+                <!-- Contenedor vacío donde JS inyectará el formulario -->
+                <app-login-form tipoUsuario="agendador"></app-login-form>
+            </div>
+
+            <div id="administrador" class="seccion-contenido" [class.activa]="seccionActiva === 'administrador'">
+                <div class="informacion">
+                    <h1>MODULO PARA ADMINISTRADORES</h1>
+                    <p>Sección para administradores, gestión y control del personal de la clínica</p>
+                </div>
+                <!-- Contenedor vacío donde JS inyectará el formulario -->
+                <app-login-form tipoUsuario="administrador"></app-login-form>
+            </div>
+
+        </main>
+    </div>
