@@ -1,11 +1,10 @@
 <div class="login">
     <h2 class="titulo-login">Acceso al Sistema</h2>
-    <p class="subtitulo-login">Ingresa tus credenciales de {{ tipoUsuario }}</p>
-    
+    <p class="subtitulo-login">Ingresa tus credenciales</p>
+
     <form class="formulario-login">
         <div class="grupo-input">
             <label>Correo electrónico o Usuario</label>
-            <!-- Usamos llaves para inyectar el tipo en el ID y que sean únicos -->
             <input type="text" id="usuario-{{ tipoUsuario }}" required>
         </div>
         <div class="grupo-input">

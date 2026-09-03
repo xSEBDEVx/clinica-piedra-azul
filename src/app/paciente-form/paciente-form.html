@@ -1,0 +1,23 @@
+<div class="citaPacientes">
+    <h2 class="titulo-form">Agendar Cita Médica</h2>
+    <p class="subtitulo-form">Por favor, completa el siguiente formulario para agendar tu cita médica</p>
+    
+    <form class="formularioCita">
+        <div class="grupo-input">
+            <label>Tipo de Documento de Identidad</label>
+            <select id="tipoDocumento" required>
+                <option value="" disabled selected>Selecciona un tipo</option>
+                <option value="CC">Cédula de Ciudadanía</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="Pasaporte">Pasaporte</option>
+                <option value="Cédula de Extranjería">Cédula de Extranjería</option >
+            </select>    
+        </div>
+        <div class="grupo-input">
+            <label for="numeroDocumento">Número de Documento</label>
+            <input type="text" id="numeroDocumento" required>
+        </div>
+        
+        <button type="submit" class="btn-agendar">Agendar Cita</button>
+    </form>
+</div>
