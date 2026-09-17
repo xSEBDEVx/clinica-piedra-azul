@@ -1,0 +1,119 @@
+.pantallaCompleta {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #F6F8FC;
+}
+
+.barraSuperior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #005092;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.logoTopbar {
+    height: 36px;
+    width: auto;
+}
+
+.navPublica,
+.navPrivada {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.navPublica a,
+.navPrivada a {
+    text-decoration: none;
+    color: #3C4043;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 4px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.navPublica a:hover,
+.navPrivada a:hover {
+    color: #005092;
+}
+
+.navPublica a.activo,
+.navPrivada a.activo {
+    color: #005092;
+    border-bottom-color: #0081C6;
+}
+
+.navPublica a.btnLoginAgenda {
+    background-color: #0081C6;
+    color: white;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border-bottom: none;
+}
+
+.navPublica a.btnLoginAgenda:hover {
+    background-color: #005092;
+    color: white;
+}
+
+.usuarioActivo {
+    font-size: 14px;
+    color: #5F6368;
+    padding-left: 6px;
+    border-left: 1px solid #E3E3E3;
+}
+
+.btnSalir {
+    background-color: transparent;
+    color: #B3261E;
+    border: 1px solid #E3E3E3;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btnSalir:hover {
+    background-color: #FDEDEC;
+}
+
+.areaPrincipal {
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+}
+
+@media (max-width: 720px) {
+    .barraSuperior {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    .navPublica,
+    .navPrivada {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
