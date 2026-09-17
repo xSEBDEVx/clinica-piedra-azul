@@ -2,15 +2,28 @@
     <h2 class="titulo-login">Acceso al Sistema</h2>
     <p class="subtitulo-login">Ingresa tus credenciales</p>
 
-    <form class="formulario-login">
+    <form class="formulario-login" [formGroup]="formulario" (ngSubmit)="onSubmit()">
         <div class="grupo-input">
-            <label>Correo electrónico o Usuario</label>
-            <input type="text" id="usuario-{{ tipoUsuario }}" required>
+            <label for="usuario-{{ tipoUsuario }}">Correo electrónico o Usuario</label>
+            <input type="text" id="usuario-{{ tipoUsuario }}" formControlName="login">
+            @if (loginControl?.invalid && loginControl?.touched) {
+                <span class="mensaje-error-campo">Este campo es obligatorio</span>
+            }
         </div>
         <div class="grupo-input">
-            <label>Contraseña</label>
-            <input type="password" id="password-{{ tipoUsuario }}" required>
+            <label for="password-{{ tipoUsuario }}">Contraseña</label>
+            <input type="password" id="password-{{ tipoUsuario }}" formControlName="password">
+            @if (passwordControl?.invalid && passwordControl?.touched) {
+                <span class="mensaje-error-campo">Este campo es obligatorio</span>
+            }
         </div>
-        <button type="submit" class="btn-ingresar">Iniciar Sesión</button>
+
+        @if (errorMensaje()) {
+            <p class="mensaje-error">{{ errorMensaje() }}</p>
+        }
+
+        <button type="submit" class="btn-ingresar" [disabled]="cargando()">
+            {{ cargando() ? 'Ingresando...' : 'Iniciar Sesión' }}
+        </button>
     </form>
 </div>
