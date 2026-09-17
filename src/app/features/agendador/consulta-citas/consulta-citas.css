@@ -1,0 +1,159 @@
+.consultaCitas {
+    background-color: #FFFFFF;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.descripcion {
+    color: #5F6368;
+    margin-bottom: 24px;
+}
+
+.filtros {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupo-input label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3C4043;
+}
+
+.grupo-input select,
+.grupo-input input {
+    padding: 12px;
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: #F9F9F9;
+}
+
+.grupo-input select:focus,
+.grupo-input input:focus {
+    outline: none;
+    border-color: #0081C6;
+    background-color: #FFFFFF;
+}
+
+.btn-consultar {
+    background-color: #005092;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 44px;
+}
+
+.btn-consultar:hover:not(:disabled) {
+    background-color: #003a6b;
+}
+
+.btn-consultar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.error-general {
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: #B3261E;
+    background-color: #FDEDEC;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.resultados {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #EEE;
+}
+
+.resumenTotal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #3C4043;
+}
+
+.totalBadge {
+    background-color: #E8F0FE;
+    color: #005092;
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.sinCitas {
+    color: #5F6368;
+    font-size: 14px;
+}
+
+.tablaCitas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tablaCitas th {
+    text-align: left;
+    padding: 10px 12px;
+    color: #5F6368;
+    font-weight: 600;
+    border-bottom: 2px solid #EEE;
+}
+
+.tablaCitas td {
+    padding: 12px;
+    border-bottom: 1px solid #F0F0F0;
+    color: #202124;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-programada {
+    background-color: #E6F4EA;
+    color: #1E7E34;
+}
+
+.badge-cancelada {
+    background-color: #FDEDEC;
+    color: #B3261E;
+}
+
+.badge-completada {
+    background-color: #E8EAED;
+    color: #3C4043;
+}
+
+@media (max-width: 640px) {
+    .filtros {
+        grid-template-columns: 1fr;
+    }
+}

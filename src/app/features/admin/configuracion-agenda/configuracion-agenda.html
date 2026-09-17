@@ -1,0 +1,121 @@
+<div class="configuracionAgenda">
+    <h1>Configuración de agenda</h1>
+
+    <!-- HU-3.1: días, horarios e intervalo por médico -->
+    <section class="tarjeta">
+        <h2>Disponibilidad por médico</h2>
+        <p class="descripcion">
+            Define los días de atención, el horario y el intervalo entre citas de cada médico.
+        </p>
+
+        <form class="formularioDisponibilidad" [formGroup]="formDisponibilidad" (ngSubmit)="guardarDisponibilidad()">
+            <div class="grupo-input">
+                <label for="profesionalId">Médico</label>
+                <select id="profesionalId" formControlName="profesionalId">
+                    <option [ngValue]="null" disabled>Selecciona un médico</option>
+                    <option *ngFor="let p of profesionales()" [ngValue]="p.id">
+                        {{ p.nombreCompleto }} — {{ p.especialidadNombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="grupo-input">
+                <label for="diaSemana">Día de atención</label>
+                <select id="diaSemana" formControlName="diaSemana">
+                    <option [ngValue]="null" disabled>Selecciona un día</option>
+                    <option *ngFor="let d of diasSemana" [ngValue]="d.valor">{{ d.etiqueta }}</option>
+                </select>
+            </div>
+
+            <div class="grupo-input">
+                <label for="horaInicio">Hora inicio</label>
+                <input type="time" id="horaInicio" formControlName="horaInicio" />
+            </div>
+
+            <div class="grupo-input">
+                <label for="horaFin">Hora fin</label>
+                <input type="time" id="horaFin" formControlName="horaFin" />
+            </div>
+
+            <div class="grupo-input">
+                <label for="duracionCitaMinutos">Intervalo entre citas (minutos)</label>
+                <input type="number" id="duracionCitaMinutos" formControlName="duracionCitaMinutos" min="5" max="240" />
+            </div>
+
+            <button type="submit" class="btn-guardar" [disabled]="guardandoDisponibilidad()">
+                {{ guardandoDisponibilidad() ? 'Guardando…' : 'Guardar configuración' }}
+            </button>
+        </form>
+
+        <p class="error-general" *ngIf="errorDisponibilidad()">{{ errorDisponibilidad() }}</p>
+        <p class="exito-general" *ngIf="exitoDisponibilidad()">{{ exitoDisponibilidad() }}</p>
+
+        <div class="listaDisponibilidad" *ngIf="formDisponibilidad.get('profesionalId')?.value">
+            <h3>Horarios configurados</h3>
+            <p class="cargando" *ngIf="cargandoDisponibilidad()">Cargando…</p>
+            <p class="sinDatos" *ngIf="!cargandoDisponibilidad() && disponibilidades().length === 0">
+                Este médico aún no tiene horarios configurados.
+            </p>
+            <table class="tablaDisponibilidad" *ngIf="!cargandoDisponibilidad() && disponibilidades().length > 0">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Horario</th>
+                        <th>Intervalo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let d of disponibilidades()">
+                        <td>{{ etiquetaDia(d.diaSemana) }}</td>
+                        <td>{{ d.horaInicio }} – {{ d.horaFin }}</td>
+                        <td>{{ d.duracionCitaMinutos }} min</td>
+                        <td>
+                            <button type="button" class="btn-eliminar" (click)="eliminarDisponibilidad(d.id)">
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- HU-3.2: ventana de tiempo para agendamiento futuro -->
+    <section class="tarjeta">
+        <h2>Ventana de agendamiento</h2>
+        <p class="descripcion">
+            Define cuántas semanas hacia adelante pueden los pacientes agendar citas.
+        </p>
+
+        <form class="formularioVentana" [formGroup]="formVentana" (ngSubmit)="guardarVentana()">
+            <div class="grupo-input">
+                <label for="semanasHabilitadas">Semanas habilitadas</label>
+                <input
+                    type="number"
+                    id="semanasHabilitadas"
+                    formControlName="semanasHabilitadas"
+                    min="1"
+                    max="52"
+                />
+                <span
+                    class="error-campo"
+                    *ngIf="formVentana.get('semanasHabilitadas')?.invalid && formVentana.get('semanasHabilitadas')?.touched"
+                >
+                    Ingresa un valor entre 1 y 52 semanas
+                </span>
+            </div>
+
+            <button type="submit" class="btn-guardar" [disabled]="guardandoVentana()">
+                {{ guardandoVentana() ? 'Guardando…' : 'Guardar ventana' }}
+            </button>
+        </form>
+
+        <p class="error-general" *ngIf="errorVentana()">{{ errorVentana() }}</p>
+        <p class="exito-general" *ngIf="exitoVentana()">{{ exitoVentana() }}</p>
+
+        <p class="infoVentana" *ngIf="fechaMaximaActual()">
+            Los pacientes pueden agendar citas hasta el <strong>{{ fechaMaximaActual() }}</strong>.
+        </p>
+    </section>
+</div>

@@ -1,0 +1,109 @@
+.login {
+    background-color: #FFFFFF;
+    padding: 32px;
+    border-radius: 12px;
+    border: 1px solid #E3E3E3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 420px;
+    margin: 20px auto;
+}
+
+.titulo-login {
+    color: #202124;
+    font-size: 20px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.subtitulo-login {
+    font-size: 14px;
+    color: #5F6368;
+    margin-bottom: 25px;
+}
+
+.formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupo-input label {
+    font-size: 14px;
+    color: #3C4043;
+    font-weight: 500;
+}
+
+.grupo-input input {
+    padding: 12px 15px;
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #202124;
+    transition: all 0.2s ease;
+}
+
+.grupo-input input:focus {
+    outline: none;
+    border-color: #0081C6;
+    box-shadow: 0 0 0 2px rgba(0, 129, 198, 0.2);
+}
+
+.error-campo {
+    font-size: 12.5px;
+    color: #B3261E;
+}
+
+.error-general {
+    font-size: 13.5px;
+    color: #B3261E;
+    background-color: #FDEDEC;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.btn-ingresar {
+    background-color: #005092;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 4px;
+}
+
+.btn-ingresar:hover:not(:disabled) {
+    background-color: #003a6b;
+}
+
+.btn-ingresar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.enlace-registro {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13.5px;
+    color: #5F6368;
+}
+
+.enlace-registro a {
+    color: #0081C6;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.enlace-registro a:hover {
+    text-decoration: underline;
+}

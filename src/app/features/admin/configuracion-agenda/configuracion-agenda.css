@@ -1,0 +1,187 @@
+.configuracionAgenda {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.configuracionAgenda h1 {
+    margin-bottom: 4px;
+}
+
+.tarjeta {
+    background-color: #FFFFFF;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.tarjeta h2 {
+    font-size: 18px;
+    color: #202124;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.descripcion {
+    color: #5F6368;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.formularioDisponibilidad {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    align-items: end;
+}
+
+.formularioVentana {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grupo-input label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #3C4043;
+}
+
+.grupo-input select,
+.grupo-input input {
+    padding: 11px;
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: #F9F9F9;
+}
+
+.grupo-input select:focus,
+.grupo-input input:focus {
+    outline: none;
+    border-color: #0081C6;
+    background-color: #FFFFFF;
+}
+
+.error-campo {
+    font-size: 12px;
+    color: #B3261E;
+}
+
+.btn-guardar {
+    background-color: #005092;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 44px;
+}
+
+.btn-guardar:hover:not(:disabled) {
+    background-color: #003a6b;
+}
+
+.btn-guardar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.error-general {
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: #B3261E;
+    background-color: #FDEDEC;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.exito-general {
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: #1E7E34;
+    background-color: #E6F4EA;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.listaDisponibilidad {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #EEE;
+}
+
+.listaDisponibilidad h3 {
+    font-size: 15px;
+    color: #202124;
+    margin-bottom: 12px;
+}
+
+.cargando,
+.sinDatos {
+    font-size: 14px;
+    color: #5F6368;
+}
+
+.tablaDisponibilidad {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tablaDisponibilidad th {
+    text-align: left;
+    padding: 10px 12px;
+    color: #5F6368;
+    font-weight: 600;
+    border-bottom: 2px solid #EEE;
+}
+
+.tablaDisponibilidad td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.btn-eliminar {
+    background: transparent;
+    border: 1px solid #E3E3E3;
+    color: #B3261E;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-eliminar:hover {
+    background-color: #FDEDEC;
+}
+
+.infoVentana {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #3C4043;
+}
+
+@media (max-width: 900px) {
+    .formularioDisponibilidad {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .formularioDisponibilidad {
+        grid-template-columns: 1fr;
+    }
+}

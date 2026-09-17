@@ -1,41 +1,28 @@
 <div class="pantallaCompleta">
-        <aside class="barraLateral">
-            <a href="index.html">
-                <img src="/images/logo2.png" class="logoPequeMenu" alt="logoInicio">
-            </a>
-          <div class="menu">
-          <button (click)="cambiarSeccion('pacientes')" [class.activo]="seccionActiva === 'pacientes'">MODULO PACIENTES</button>
-          </div>
-        </aside>
+    <header class="barraSuperior">
+        <a routerLink="/" class="marca">
+            <img src="/images/logo2.png" class="logoTopbar" alt="Piedra Azul">
+            <span>Piedra Azul</span>
+        </a>
 
-        <main class="areaPrincipal">
-            <div id="inicio" class="seccion-contenido activa" [class.activa]="seccionActiva === 'inicio'">
-                <div class="grupoBotonesLoginAgenda">
-                    <button class="btnLoginAgenda" (click)="cambiarSeccion('agendador')">
-                    <i class="iconoUsuario"></i> Iniciar sesión
-                </button>
-                <button class="btnLoginAgenda" (click)="cambiarSeccion('pacientes')">
-                    <i class="iconoUsuario"></i> Agenda tu cita
-                </button>
-                </div>
-                <app-carrusel></app-carrusel>
-            </div>
+        <nav class="navPublica" *ngIf="!authService.estaAutenticado()">
+            <a routerLink="/registro" routerLinkActive="activo">Regístrate</a>
+            <a routerLink="/agendar-cita" routerLinkActive="activo">Agenda tu cita</a>
+            <a routerLink="/login" routerLinkActive="activo" class="btnLoginAgenda">Iniciar sesión</a>
+        </nav>
 
-            <div id="pacientes" class="seccion-contenido"  [class.activa]="seccionActiva === 'pacientes'">
-                <div class="informacion">
-                    <h1>MODULO PARA PACIENTES</h1>
-                    <p>Sección para pacientes, separa tus citas médicas en minutos</p>
-                </div>
-                <app-paciente-form></app-paciente-form>
-            </div>
+        <nav class="navPrivada" *ngIf="authService.estaAutenticado()">
+            <a *ngIf="authService.tieneRol('paciente')" routerLink="/agendar-cita" routerLinkActive="activo">Agendar cita</a>
+            <a *ngIf="authService.tieneRol('agendador','administrador')" routerLink="/consulta-citas" routerLinkActive="activo">Consultar citas</a>
+            <a *ngIf="authService.tieneRol('administrador')" routerLink="/admin/configuracion-agenda" routerLinkActive="activo">Configurar agenda</a>
+            <span class="usuarioActivo">{{ authService.sesion()?.nombreCompleto }}</span>
+            <button class="btnSalir" (click)="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
 
-            <div id="agendador" class="seccion-contenido" [class.activa]="seccionActiva === 'agendador'">
-                <div class="informacion">
-                    <h1>MODULO PARA PERSONAL CLINICO</h1>
-                    <p>Sección para agendadores y administradores</p>
-                </div>
-                <app-login-form tipoUsuario="agendador"></app-login-form>
-            </div>
-        <app-footer></app-footer>
-        </main>
-    </div>
+    <main class="areaPrincipal">
+        <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+</div>

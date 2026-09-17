@@ -1,0 +1,85 @@
+<div class="agendarCita" *ngIf="!citaConfirmada()">
+    <h1>Agendar cita médica</h1>
+    <p class="descripcion">Selecciona el médico, la fecha y la franja horaria de tu preferencia.</p>
+
+    <form class="formularioCita" [formGroup]="form">
+        <div class="grupo-input">
+            <label for="profesionalId">Médico</label>
+            <select id="profesionalId" formControlName="profesionalId">
+                <option [ngValue]="null" disabled>Selecciona un médico</option>
+                <option *ngFor="let p of profesionales()" [ngValue]="p.id">
+                    {{ p.nombreCompleto }} — {{ p.especialidadNombre }}
+                </option>
+            </select>
+        </div>
+
+        <div class="grupo-input">
+            <label for="fecha">Fecha</label>
+            <input
+                type="date"
+                id="fecha"
+                formControlName="fecha"
+                [min]="fechaMinima"
+                [max]="fechaMaxima()"
+            />
+        </div>
+    </form>
+
+    <p class="error-general" *ngIf="errorMensaje()">{{ errorMensaje() }}</p>
+
+    <section class="bloqueFranjas" *ngIf="form.get('profesionalId')?.value && form.get('fecha')?.value">
+        <h3>Horarios disponibles</h3>
+
+        <p class="cargando" *ngIf="cargandoFranjas()">Cargando horarios…</p>
+
+        <p class="sinFranjas" *ngIf="!cargandoFranjas() && franjas().length === 0">
+            No hay horarios disponibles para la fecha seleccionada. Intenta con otra fecha.
+        </p>
+
+        <div class="gridFranjas" *ngIf="!cargandoFranjas() && franjas().length > 0">
+            <button
+                type="button"
+                *ngFor="let franja of franjas()"
+                class="chipFranja"
+                [class.seleccionada]="franjaSeleccionada()?.valor === franja.valor"
+                (click)="seleccionarFranja(franja)"
+            >
+                {{ franja.etiqueta }}
+            </button>
+        </div>
+    </section>
+
+    <section class="resumen" *ngIf="franjaSeleccionada() as franja">
+        <h3>Resumen de tu cita</h3>
+        <dl>
+            <dt>Médico</dt>
+            <dd>{{ profesionalSeleccionado?.nombreCompleto }} ({{ profesionalSeleccionado?.especialidadNombre }})</dd>
+            <dt>Fecha</dt>
+            <dd>{{ form.get('fecha')?.value }}</dd>
+            <dt>Hora</dt>
+            <dd>{{ franja.etiqueta }}</dd>
+        </dl>
+
+        <button
+            type="button"
+            class="btn-agendar"
+            [disabled]="cargandoConfirmacion()"
+            (click)="confirmarCita()"
+        >
+            {{ cargandoConfirmacion() ? 'Confirmando…' : 'Confirmar cita' }}
+        </button>
+    </section>
+</div>
+
+<div class="confirmacionCita" *ngIf="citaConfirmada() as cita">
+    <h1>¡Cita agendada con éxito!</h1>
+    <dl>
+        <dt>Médico</dt>
+        <dd>{{ cita.profesionalNombre }}</dd>
+        <dt>Fecha y hora</dt>
+        <dd>{{ cita.fechaHora | date: 'EEEE d MMMM y, h:mm a':'':'es-CO' }}</dd>
+        <dt>Estado</dt>
+        <dd class="estadoBadge">{{ cita.estado }}</dd>
+    </dl>
+    <button type="button" class="btn-agendar" (click)="nuevaCita()">Agendar otra cita</button>
+</div>
