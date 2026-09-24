@@ -30,17 +30,15 @@ export class RegistroService {
     usuario: UsuarioDTO,
     paciente: PacienteDTO,
     password: string,
-  ): Observable<UsuarioDTO> {
+  ): Observable<void> {
     const request: RegistroPacienteRequest = { usuario, paciente };
     return this.http.post<UsuarioDTO>(`${this.baseUrl}/paciente`, request).pipe(
       switchMap((usuarioCreado) =>
-        this.authService
-          .registrarCredencial({
-            usuarioId: usuarioCreado.id!,
-            login: usuario.login,
-            password,
-          })
-          .pipe(switchMap(() => [usuarioCreado])),
+        this.authService.registrarCredencial({
+          usuarioId: usuarioCreado.id!,
+          login: usuario.login,
+          password,
+        }),
       ),
     );
   }
