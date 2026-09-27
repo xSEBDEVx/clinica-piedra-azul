@@ -28,6 +28,7 @@ export class Registro {
     cedulaIdentidad: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', [Validators.required]],
+    login: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
@@ -42,12 +43,12 @@ export class Registro {
     this.cargando.set(true);
     this.errorMensaje.set(null);
 
-    const { nombreCompleto, cedulaIdentidad, email, telefono, password } =
+    const { nombreCompleto, cedulaIdentidad, email, telefono, login, password } =
       this.form.getRawValue();
 
     const usuario: UsuarioDTO = {
       nombreCompleto: nombreCompleto!,
-      login: email!,
+      login: login!,
       rol: 'paciente',
     };
 
@@ -66,9 +67,9 @@ export class Registro {
       },
       error: (err: HttpErrorResponse) => {
         this.cargando.set(false);
-        // SC-4: si el correo/login ya está registrado, el backend responde 409 (Conflict).
+        // SC-4: si el login ya está registrado, el backend responde 409 (Conflict).
         if (err.status === 409) {
-          this.errorMensaje.set('Este correo ya está registrado. Intenta iniciar sesión.');
+          this.errorMensaje.set('Este nombre de usuario ya está en uso. Elige otro o inicia sesión.');
           return;
         }
         const apiError = err.error as ApiError | undefined;

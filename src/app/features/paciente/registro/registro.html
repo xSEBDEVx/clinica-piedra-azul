@@ -31,6 +31,20 @@
         </div>
 
         <div class="grupo-input">
+            <label for="login">Nombre de usuario</label>
+            <input type="text" id="login" formControlName="login" autocomplete="username" />
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('required') && form.get('login')?.touched">
+                El nombre de usuario es obligatorio
+            </span>
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('minlength') && form.get('login')?.touched">
+                Debe tener al menos 3 caracteres
+            </span>
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('maxlength') && form.get('login')?.touched">
+                Máximo 50 caracteres
+            </span>
+        </div>
+
+        <div class="grupo-input">
             <label for="telefono">Teléfono</label>
             <input type="tel" id="telefono" formControlName="telefono" />
             <span class="error-campo" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
