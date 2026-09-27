@@ -77,7 +77,7 @@
         <dt>Médico</dt>
         <dd>{{ cita.profesionalNombre }}</dd>
         <dt>Fecha y hora</dt>
-        <dd>{{ cita.fechaHora | date: 'EEEE d MMMM y, h:mm a':'':'es-CO' }}</dd>
+        <dd>{{ cita.fechaHora | date: 'EEEE d MMMM y, h:mm a':'-0500':'es-CO' }}</dd>
         <dt>Estado</dt>
         <dd class="estadoBadge">{{ cita.estado }}</dd>
     </dl>

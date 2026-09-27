@@ -85,6 +85,7 @@ export class AgendarCita implements OnInit {
           etiqueta: new Date(h).toLocaleTimeString('es-CO', {
             hour: '2-digit',
             minute: '2-digit',
+            timeZone: 'America/Bogota',
           }),
         }));
         this.franjas.set(franjas);
