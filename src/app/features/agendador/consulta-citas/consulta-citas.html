@@ -47,7 +47,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let cita of citas()">
-                    <td>{{ cita.fechaHora | date: 'h:mm a':'':'es-CO' }}</td>
+                    <td>{{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}</td>
                     <td>{{ cita.pacienteNombre }}</td>
                     <td><span [class]="claseEstado(cita.estado)">{{ etiquetaEstado(cita.estado) }}</span></td>
                 </tr>

@@ -28,6 +28,7 @@ describe('Registro', () => {
       cedulaIdentidad: '1234567890',
       email: 'paciente@correo.com',
       telefono: '3001234567',
+      login: 'paciente123',
       password: 'secreta123',
     });
   }
@@ -76,7 +77,7 @@ describe('Registro', () => {
     componente.submit();
 
     expect(registroServiceSpy.registrarPaciente).toHaveBeenCalledWith(
-      { nombreCompleto: 'Paciente de Prueba', login: 'paciente@correo.com', rol: 'paciente' },
+      { nombreCompleto: 'Paciente de Prueba', login: 'paciente123', rol: 'paciente' },
       {
         nombreCompleto: 'Paciente de Prueba',
         cedulaIdentidad: '1234567890',
@@ -87,7 +88,7 @@ describe('Registro', () => {
     );
   });
 
-  it('con error 409, muestra el mensaje de correo ya registrado (fix backend #5)', () => {
+  it('con error 409, muestra el mensaje de nombre de usuario ya registrado (fix backend #5)', () => {
     // Antes del fix #5, LoginDuplicadoException/CredencialDuplicadaException
     // devolvían 500 en vez de 409, así que este mensaje nunca se mostraba.
     const error = new HttpErrorResponse({ status: 409, statusText: 'Conflict' });
@@ -99,7 +100,7 @@ describe('Registro', () => {
 
     expect(componente.cargando()).toBeFalse();
     expect(componente.registroExitoso()).toBeFalse();
-    expect(componente.errorMensaje()).toBe('Este correo ya está registrado. Intenta iniciar sesión.');
+    expect(componente.errorMensaje()).toBe('Este nombre de usuario ya está en uso. Elige otro o inicia sesión.');
   });
 
   it('con otro error, muestra el mensaje del backend si viene presente', () => {
