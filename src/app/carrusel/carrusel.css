@@ -1,4 +1,4 @@
-.contenedor-carrusel {
+.contenedorCarrusel {
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -38,5 +38,5 @@
     background-color: #005092;
 }
 
-.prev { left: 100px; }
-.next { right: 100px; }
+.prev { left: 16px; }
+.next { right: 16px; }
