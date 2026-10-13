@@ -1,0 +1,53 @@
+<div class="historialCitas">
+  <h1>Historial de citas del paciente</h1>
+  <p class="descripcion">Ingresa la cédula del paciente para consultar las citas que ha tenido.</p>
+
+  <form class="filtros" [formGroup]="form" (ngSubmit)="buscar()">
+    <div class="grupo-input">
+      <label for="cedula">Cédula del paciente</label>
+      <input type="text" id="cedula" formControlName="cedula" placeholder="Ej. 1061234567"
+             autocomplete="off" inputmode="numeric" />
+      <small class="error-campo" *ngIf="form.get('cedula')?.touched && form.get('cedula')?.invalid">
+        Ingresa una cédula válida (solo números o letras, máximo 20 caracteres).
+      </small>
+    </div>
+
+    <button type="submit" class="btn-consultar" [disabled]="cargando()">
+      {{ cargando() ? 'Buscando…' : 'Buscar' }}
+    </button>
+  </form>
+
+  <p class="error-general" *ngIf="errorMensaje()">{{ errorMensaje() }}</p>
+
+  <section class="resultados" *ngIf="consultaRealizada() && historial() as h">
+    <div class="resumenTotal">
+            <span>
+                Paciente: <strong>{{ h.pacienteNombre }}</strong> — C.C. {{ h.cedulaIdentidad }}
+            </span>
+      <span class="totalBadge">{{ h.citas.length }} cita(s)</span>
+    </div>
+
+    <p class="sinCitas" *ngIf="h.citas.length === 0">
+      El paciente aún no tiene citas registradas.
+    </p>
+
+    <table class="tablaCitas" *ngIf="h.citas.length > 0">
+      <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Médico/Terapista</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cita of h.citas">
+        <td>{{ cita.fechaHora | date: 'dd/MM/yyyy':'-0500':'es-CO' }}</td>
+        <td>{{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}</td>
+        <td>{{ cita.profesionalNombre }}</td>
+        <td><span [class]="claseEstado(cita.estado)">{{ etiquetaEstado(cita.estado) }}</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

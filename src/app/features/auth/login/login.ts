@@ -57,6 +57,7 @@ export class Login {
       case 'paciente':
         this.router.navigate(['/agendar-cita']);
         break;
+      case 'profesional':
       case 'agendador':
         this.router.navigate(['/consulta-citas']);
         break;
