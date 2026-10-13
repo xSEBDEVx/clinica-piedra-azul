@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CitaDTO, EstadoCita } from '../models/scheduling.model';
+import { CitaDTO, EstadoCita, HistorialCitasPacienteDTO } from '../models/scheduling.model';
 
 @Injectable({ providedIn: 'root' })
 export class CitaService {
@@ -41,13 +41,33 @@ export class CitaService {
   }
 
   /**
+   * HU-1.2: genera el archivo CSV con las citas de un médico/terapista en una fecha.
+   * El backend responde el archivo (text/csv, UTF-8) y aquí se recibe como Blob.
+   */
+  exportarCsv(profesionalId: number, fecha: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/profesional/${profesionalId}/fecha/exportar`, {
+      params: { fecha },
+      responseType: 'blob',
+    });
+  }
+
+  /**
+   * HU-4.1: busca al paciente por cédula y devuelve su historial de citas
+   * (404 si no existe un paciente con esa cédula).
+   */
+  consultarHistorialPorCedula(cedula: string): Observable<HistorialCitasPacienteDTO> {
+    return this.http.get<HistorialCitasPacienteDTO>(
+      `${this.baseUrl}/paciente/cedula/${encodeURIComponent(cedula)}`,
+    );
+  }
+
+  /**
    * HU-2.2 SC-2/SC-3: franjas horarias disponibles de un profesional en una fecha.
    */
   obtenerHorariosDisponibles(profesionalId: number, fecha: string): Observable<string[]> {
-    return this.http.get<string[]>(
-      `${this.baseUrl}/profesional/${profesionalId}/disponibilidad`,
-      { params: { fecha } },
-    );
+    return this.http.get<string[]>(`${this.baseUrl}/profesional/${profesionalId}/disponibilidad`, {
+      params: { fecha },
+    });
   }
 
   cancelar(id: number): Observable<CitaDTO> {

@@ -21,6 +21,7 @@ export class App {
     switch (this.authService.rolActual()) {
       case 'paciente':
         return '/agendar-cita';
+      case 'profesional':
       case 'agendador':
         return '/consulta-citas';
       case 'administrador':

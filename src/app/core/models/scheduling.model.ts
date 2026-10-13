@@ -33,3 +33,11 @@ export interface ConfiguracionAgendamientoDTO {
   id?: number;
   semanasHabilitadas: number;
 }
+
+/** HU-4.1: historial de citas de un paciente consultado por cédula. */
+export interface HistorialCitasPacienteDTO {
+  pacienteId: number;
+  pacienteNombre: string;
+  cedulaIdentidad: string;
+  citas: CitaDTO[];
+}

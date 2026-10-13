@@ -1,28 +1,29 @@
 <div class="pantallaCompleta">
-    <header class="barraSuperior">
-        <a routerLink="/" class="marca">
-            <img src="/images/logo2.jpg" class="logoTopbar" alt="Piedra Azul">
-            <span>Piedra Azul</span>
-        </a>
+  <header class="barraSuperior">
+    <a routerLink="/" class="marca">
+      <img src="/images/logo2.jpg" class="logoTopbar" alt="Piedra Azul">
+      <span>Piedra Azul</span>
+    </a>
 
-        <nav class="navPublica" *ngIf="!authService.estaAutenticado()">
-            <a routerLink="/registro" routerLinkActive="activo">Regístrate</a>
-            <a routerLink="/agendar-cita" routerLinkActive="activo">Agenda tu cita</a>
-            <a routerLink="/login" routerLinkActive="activo" class="btnLoginAgenda">Iniciar sesión</a>
-        </nav>
+    <nav class="navPublica" *ngIf="!authService.estaAutenticado()">
+      <a routerLink="/registro" routerLinkActive="activo">Regístrate</a>
+      <a routerLink="/agendar-cita" routerLinkActive="activo">Agenda tu cita</a>
+      <a routerLink="/login" routerLinkActive="activo" class="btnLoginAgenda">Iniciar sesión</a>
+    </nav>
 
-        <nav class="navPrivada" *ngIf="authService.estaAutenticado()">
-            <a *ngIf="authService.tieneRol('paciente')" routerLink="/agendar-cita" routerLinkActive="activo">Agendar cita</a>
-            <a *ngIf="authService.tieneRol('agendador','administrador')" routerLink="/consulta-citas" routerLinkActive="activo">Consultar citas</a>
-            <a *ngIf="authService.tieneRol('administrador')" routerLink="/admin/configuracion-agenda" routerLinkActive="activo">Configurar agenda</a>
-            <span class="usuarioActivo">{{ authService.sesion()?.nombreCompleto }}</span>
-            <button class="btnSalir" (click)="cerrarSesion()">Cerrar sesión</button>
-        </nav>
-    </header>
+    <nav class="navPrivada" *ngIf="authService.estaAutenticado()">
+      <a *ngIf="authService.tieneRol('paciente')" routerLink="/agendar-cita" routerLinkActive="activo">Agendar cita</a>
+      <a *ngIf="authService.tieneRol('profesional','agendador','administrador')" routerLink="/consulta-citas" routerLinkActive="activo">Consultar citas</a>
+      <a *ngIf="authService.tieneRol('profesional','agendador','administrador')" routerLink="/historial-citas" routerLinkActive="activo">Historial de paciente</a>
+      <a *ngIf="authService.tieneRol('administrador')" routerLink="/admin/configuracion-agenda" routerLinkActive="activo">Configurar agenda</a>
+      <span class="usuarioActivo">{{ authService.sesion()?.nombreCompleto }}</span>
+      <button class="btnSalir" (click)="cerrarSesion()">Cerrar sesión</button>
+    </nav>
+  </header>
 
-    <main class="areaPrincipal">
-        <router-outlet></router-outlet>
-    </main>
+  <main class="areaPrincipal">
+    <router-outlet></router-outlet>
+  </main>
 
-    <app-footer></app-footer>
+  <app-footer></app-footer>
 </div>

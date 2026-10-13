@@ -13,8 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'registro',
-    loadComponent: () =>
-      import('./features/paciente/registro/registro').then((m) => m.Registro),
+    loadComponent: () => import('./features/paciente/registro/registro').then((m) => m.Registro),
   },
   {
     path: 'agendar-cita',
@@ -26,11 +25,17 @@ export const routes: Routes = [
   {
     path: 'consulta-citas',
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['agendador', 'administrador'] },
+    data: { roles: ['profesional', 'agendador', 'administrador'] },
     loadComponent: () =>
-      import('./features/agendador/consulta-citas/consulta-citas').then(
-        (m) => m.ConsultaCitas,
-      ),
+      import('./features/agendador/consulta-citas/consulta-citas').then((m) => m.ConsultaCitas),
+  },
+  {
+    // HU-4.1: historial de citas de un paciente por cédula
+    path: 'historial-citas',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['profesional', 'agendador', 'administrador'] },
+    loadComponent: () =>
+      import('./features/agendador/historial-citas/historial-citas').then((m) => m.HistorialCitas),
   },
   {
     path: 'admin/configuracion-agenda',

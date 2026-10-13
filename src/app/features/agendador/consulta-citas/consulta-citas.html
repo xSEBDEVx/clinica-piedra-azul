@@ -1,57 +1,69 @@
 <div class="consultaCitas">
-    <h1>Consulta de citas</h1>
-    <p class="descripcion">Selecciona un médico y una fecha para ver su agenda.</p>
+  <h1>Consulta de citas</h1>
+  <p class="descripcion">Selecciona una fecha y un médico o terapista para ver su agenda y exportarla.</p>
 
-    <form class="filtros" [formGroup]="form" (ngSubmit)="consultar()">
-        <div class="grupo-input">
-            <label for="profesionalId">Médico</label>
-            <select id="profesionalId" formControlName="profesionalId">
-                <option [ngValue]="null" disabled>Selecciona un médico</option>
-                <option *ngFor="let p of profesionales()" [ngValue]="p.id">
-                    {{ p.nombreCompleto }} — {{ p.especialidadNombre }}
-                </option>
-            </select>
-        </div>
+  <form class="filtros" [formGroup]="form" (ngSubmit)="consultar()">
+    <div class="grupo-input">
+      <label for="profesionalId">Médico o terapista</label>
+      <select id="profesionalId" formControlName="profesionalId">
+        <option [ngValue]="null" disabled>Selecciona un médico o terapista</option>
+        <option *ngFor="let p of profesionales()" [ngValue]="p.id">
+          {{ p.nombreCompleto }} — {{ p.especialidadNombre }}
+        </option>
+      </select>
+    </div>
 
-        <div class="grupo-input">
-            <label for="fecha">Fecha</label>
-            <input type="date" id="fecha" formControlName="fecha" />
-        </div>
+    <div class="grupo-input">
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" formControlName="fecha" />
+    </div>
 
-        <button type="submit" class="btn-consultar" [disabled]="cargando()">
-            {{ cargando() ? 'Consultando…' : 'Consultar' }}
-        </button>
-    </form>
+    <button type="submit" class="btn-consultar" [disabled]="cargando()">
+      {{ cargando() ? 'Consultando…' : 'Consultar' }}
+    </button>
+  </form>
 
-    <p class="error-general" *ngIf="errorMensaje()">{{ errorMensaje() }}</p>
+  <p class="error-general" *ngIf="errorMensaje()">{{ errorMensaje() }}</p>
 
-    <section class="resultados" *ngIf="consultaRealizada() && !cargando()">
-        <div class="resumenTotal">
+  <section class="resultados" *ngIf="consultaRealizada() && !cargando()">
+    <div class="resumenTotal">
             <span>
-                Médico: <strong>{{ profesionalSeleccionado?.nombreCompleto }}</strong>
+                Médico/Terapista: <strong>{{ profesionalSeleccionado?.nombreCompleto }}</strong>
             </span>
-            <span class="totalBadge">{{ totalCitas() }} cita(s) registrada(s)</span>
-        </div>
+      <span class="totalBadge">{{ totalCitas() }} cita(s) registrada(s)</span>
+    </div>
 
-        <p class="sinCitas" *ngIf="citas().length === 0">
-            No hay citas registradas para el médico y la fecha seleccionados.
-        </p>
+    <p class="sinCitas" *ngIf="citas().length === 0">
+      No hay citas registradas para el médico o terapista y la fecha seleccionados.
+    </p>
 
-        <table class="tablaCitas" *ngIf="citas().length > 0">
-            <thead>
-                <tr>
-                    <th>Hora</th>
-                    <th>Paciente</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let cita of citas()">
-                    <td>{{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}</td>
-                    <td>{{ cita.pacienteNombre }}</td>
-                    <td><span [class]="claseEstado(cita.estado)">{{ etiquetaEstado(cita.estado) }}</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+    <table class="tablaCitas" *ngIf="citas().length > 0">
+      <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Paciente</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cita of citas()">
+        <td>{{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}</td>
+        <td>{{ cita.pacienteNombre }}</td>
+        <td><span [class]="claseEstado(cita.estado)">{{ etiquetaEstado(cita.estado) }}</span></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- HU-1.2: exportar y descargar -->
+    <div class="acciones-exportar" *ngIf="citas().length > 0">
+      <button type="button" class="btn-exportar" (click)="exportar()" [disabled]="exportando()">
+        {{ exportando() ? 'Generando archivo…' : 'Exportar a CSV' }}
+      </button>
+
+      <div class="archivo-listo" *ngIf="archivoExportado() as archivo">
+        <span>Archivo listo: <strong>{{ archivo.nombre }}</strong> ({{ tamanoArchivo() }})</span>
+        <button type="button" class="btn-descargar" (click)="descargar()">Descargar archivo</button>
+      </div>
+    </div>
+  </section>
 </div>
