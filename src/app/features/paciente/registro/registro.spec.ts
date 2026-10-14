@@ -29,7 +29,7 @@ describe('Registro', () => {
       email: 'paciente@correo.com',
       telefono: '3001234567',
       login: 'paciente123',
-      password: 'secreta123',
+      password: 'Secreta123',
     });
   }
 
@@ -45,6 +45,19 @@ describe('Registro', () => {
 
     expect(registroServiceSpy.registrarPaciente).not.toHaveBeenCalled();
     expect(componente.form.get('email')?.touched).toBeTrue();
+  });
+
+  it('rechaza contraseñas que no cumplen la política de Keycloak (8+, mayúscula y número)', () => {
+    const componente = crearComponente();
+    llenarFormularioValido(componente);
+
+    for (const debil of ['Corta1', 'sinmayuscula1', 'SinNumeroAlguno']) {
+      componente.form.get('password')!.setValue(debil);
+      componente.submit();
+      expect(componente.form.get('password')!.invalid).withContext(debil).toBeTrue();
+    }
+
+    expect(registroServiceSpy.registrarPaciente).not.toHaveBeenCalled();
   });
 
   it('en caso de éxito, marca registroExitoso y programa la navegación a /login', () => {
@@ -84,7 +97,7 @@ describe('Registro', () => {
         telefono: '3001234567',
         email: 'paciente@correo.com',
       },
-      'secreta123',
+      'Secreta123',
     );
   });
 

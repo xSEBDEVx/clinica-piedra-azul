@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { Footer } from './footer/footer';
 
@@ -12,10 +12,7 @@ import { Footer } from './footer/footer';
   styleUrl: './app.css',
 })
 export class App {
-  constructor(
-    public authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(public authService: AuthService) {}
 
   get inicioSegunRol(): string {
     switch (this.authService.rolActual()) {
@@ -32,7 +29,7 @@ export class App {
   }
 
   cerrarSesion(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    // Keycloak cierra la sesión y devuelve al usuario a la página de inicio.
+    void this.authService.logout();
   }
 }

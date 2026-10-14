@@ -1,34 +1,25 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Observable } from 'rxjs';
 import { authInterceptor } from './auth.interceptor';
 import { AuthService } from '../services/auth.service';
-import { AuthResponse } from '../models/auth.model';
+import { environment } from '../../../environments/environment';
 
 describe('authInterceptor', () => {
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
-  const authResponse: AuthResponse = {
-    accessToken: 'access-nuevo',
-    refreshToken: 'refresh-nuevo',
-    tipo: 'Bearer',
-    expiresIn: 900000,
-    usuarioId: 7,
-    login: 'paciente@correo.com',
-    nombreCompleto: 'Paciente Uno',
-    rol: 'paciente',
-  };
+  const urlCitas = `${environment.apiUrl}/scheduling/citas/paciente/5`;
+  const esperar = () => new Promise<void>((resolve) => setTimeout(resolve));
 
   beforeEach(() => {
     authServiceSpy = jasmine.createSpyObj('AuthService', [
-      'getAccessToken',
-      'getRefreshToken',
-      'refresh',
+      'tokenVigente',
+      'estaAutenticado',
       'logout',
     ]);
+    authServiceSpy.logout.and.resolveTo(undefined);
 
     TestBed.configureTestingModule({
       providers: [
@@ -42,115 +33,69 @@ describe('authInterceptor', () => {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+  afterEach(() => httpMock.verify());
 
-  it('adjunta el access token a una petición hacia una ruta protegida', () => {
-    authServiceSpy.getAccessToken.and.returnValue('access-123');
+  it('adjunta el access token de Keycloak a una llamada a la API', async () => {
+    authServiceSpy.tokenVigente.and.resolveTo('access-123');
 
-    httpClient.get('/api/scheduling/citas/paciente/5').subscribe();
+    httpClient.get(urlCitas).subscribe();
+    await esperar();
 
-    const req = httpMock.expectOne('/api/scheduling/citas/paciente/5');
+    const req = httpMock.expectOne(urlCitas);
     expect(req.request.headers.get('Authorization')).toBe('Bearer access-123');
     req.flush({});
   });
 
-  it('no adjunta Authorization cuando no hay access token', () => {
-    authServiceSpy.getAccessToken.and.returnValue(null);
+  it('no adjunta Authorization cuando no hay sesión', async () => {
+    authServiceSpy.tokenVigente.and.resolveTo(null);
 
-    httpClient.get('/api/scheduling/citas/paciente/5').subscribe();
+    httpClient.get(urlCitas).subscribe();
+    await esperar();
 
-    const req = httpMock.expectOne('/api/scheduling/citas/paciente/5');
+    const req = httpMock.expectOne(urlCitas);
     expect(req.request.headers.has('Authorization')).toBeFalse();
     req.flush({});
   });
 
-  it('no adjunta Authorization en rutas públicas aunque haya token guardado', () => {
-    authServiceSpy.getAccessToken.and.returnValue('access-123');
+  it('no adjunta token ni consulta a Keycloak en el autorregistro de pacientes', () => {
+    httpClient.post(`${environment.apiUrl}/users/registro/paciente`, {}).subscribe();
 
-    httpClient.post('/api/auth/login', { login: 'x', password: 'y' }).subscribe();
-
-    const req = httpMock.expectOne('/api/auth/login');
+    const req = httpMock.expectOne(`${environment.apiUrl}/users/registro/paciente`);
     expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(authServiceSpy.tokenVigente).not.toHaveBeenCalled();
     req.flush({});
   });
 
-  it('ante un 401 en ruta protegida, refresca el token y reintenta la petición original', () => {
-    authServiceSpy.getAccessToken.and.returnValues('access-viejo', 'access-nuevo');
-    authServiceSpy.getRefreshToken.and.returnValue('refresh-viejo');
-    authServiceSpy.refresh.and.returnValue(
-      new Observable<AuthResponse>((subscriber) => {
-        subscriber.next(authResponse);
-        subscriber.complete();
-      }),
-    );
+  it('no envía el token a URLs que no son de la API', () => {
+    httpClient.get('https://otro-sitio.example.com/datos').subscribe();
 
-    let resultado: unknown;
-    httpClient.get('/api/scheduling/citas/paciente/5').subscribe((res) => (resultado = res));
+    const req = httpMock.expectOne('https://otro-sitio.example.com/datos');
+    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(authServiceSpy.tokenVigente).not.toHaveBeenCalled();
+    req.flush({});
+  });
 
-    const primeraPeticion = httpMock.expectOne('/api/scheduling/citas/paciente/5');
-    expect(primeraPeticion.request.headers.get('Authorization')).toBe('Bearer access-viejo');
-    primeraPeticion.flush('no autorizado', { status: 401, statusText: 'Unauthorized' });
+  it('ante un 401 con sesión abierta, cierra la sesión en Keycloak y propaga el error', async () => {
+    authServiceSpy.tokenVigente.and.resolveTo('access-123');
+    authServiceSpy.estaAutenticado.and.returnValue(true);
+    let estado: number | undefined;
 
-    expect(authServiceSpy.refresh).toHaveBeenCalled();
+    httpClient.get(urlCitas).subscribe({ error: (e) => (estado = e.status) });
+    await esperar();
+    httpMock.expectOne(urlCitas).flush({}, { status: 401, statusText: 'Unauthorized' });
 
-    const reintento = httpMock.expectOne('/api/scheduling/citas/paciente/5');
-    expect(reintento.request.headers.get('Authorization')).toBe('Bearer access-nuevo');
-    reintento.flush({ ok: true });
+    expect(estado).toBe(401);
+    expect(authServiceSpy.logout).toHaveBeenCalledTimes(1);
+  });
 
-    expect(resultado).toEqual({ ok: true });
+  it('un 403 (sin permisos) no cierra la sesión', async () => {
+    authServiceSpy.tokenVigente.and.resolveTo('access-123');
+    authServiceSpy.estaAutenticado.and.returnValue(true);
+
+    httpClient.get(urlCitas).subscribe({ error: () => {} });
+    await esperar();
+    httpMock.expectOne(urlCitas).flush({}, { status: 403, statusText: 'Forbidden' });
+
     expect(authServiceSpy.logout).not.toHaveBeenCalled();
-  });
-
-  it('si el refresh también falla, cierra la sesión y propaga el error', () => {
-    authServiceSpy.getAccessToken.and.returnValue('access-viejo');
-    authServiceSpy.getRefreshToken.and.returnValue('refresh-viejo');
-    authServiceSpy.refresh.and.returnValue(
-      new Observable<AuthResponse>((subscriber) => {
-        subscriber.error({ status: 401 });
-      }),
-    );
-
-    let errorRecibido: unknown;
-    httpClient.get('/api/scheduling/citas/paciente/5').subscribe({
-      next: () => fail('no debería completar con éxito'),
-      error: (err) => (errorRecibido = err),
-    });
-
-    const primeraPeticion = httpMock.expectOne('/api/scheduling/citas/paciente/5');
-    primeraPeticion.flush('no autorizado', { status: 401, statusText: 'Unauthorized' });
-
-    expect(authServiceSpy.logout).toHaveBeenCalled();
-    expect(errorRecibido).toBeTruthy();
-  });
-
-  it('un 401 sin refresh token guardado no intenta refrescar', () => {
-    authServiceSpy.getAccessToken.and.returnValue('access-viejo');
-    authServiceSpy.getRefreshToken.and.returnValue(null);
-
-    httpClient.get('/api/scheduling/citas/paciente/5').subscribe({
-      error: () => {},
-    });
-
-    const req = httpMock.expectOne('/api/scheduling/citas/paciente/5');
-    req.flush('no autorizado', { status: 401, statusText: 'Unauthorized' });
-
-    // httpMock.verify() en afterEach confirma además que no quedó ninguna
-    // petición de reintento pendiente.
-    expect(authServiceSpy.refresh).not.toHaveBeenCalled();
-  });
-
-  it('un 401 en una ruta pública no intenta refrescar', () => {
-    authServiceSpy.getAccessToken.and.returnValue(null);
-
-    httpClient.post('/api/auth/login', { login: 'x', password: 'y' }).subscribe({
-      error: () => {},
-    });
-
-    const req = httpMock.expectOne('/api/auth/login');
-    req.flush('credenciales inválidas', { status: 401, statusText: 'Unauthorized' });
-
-    expect(authServiceSpy.refresh).not.toHaveBeenCalled();
   });
 });

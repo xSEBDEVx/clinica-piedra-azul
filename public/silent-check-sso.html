@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <body>
+    <!-- Lo usa keycloak-js (check-sso) para comprobar la sesión sin recargar la app. -->
+    <script>
+      parent.postMessage(location.href, location.origin);
+    </script>
+  </body>
+</html>

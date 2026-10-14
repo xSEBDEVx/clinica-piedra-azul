@@ -1,45 +1,33 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, from, switchMap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../services/auth.service';
 
-const RUTAS_PUBLICAS = ['/auth/login', '/auth/refresh', '/auth/registro', '/users/registro'];
-
-function esRutaPublica(url: string): boolean {
-  return RUTAS_PUBLICAS.some((ruta) => url.includes(ruta));
+/** Único endpoint de la API que se llama sin sesión: el autorregistro de pacientes. */
+function esLlamadaPublica(method: string, url: string): boolean {
+  return method === 'POST' && url.includes('/users/registro/paciente');
 }
 
 /**
- * Adjunta el access token a cada petición saliente hacia la API y, si el
- * backend responde 401 (token expirado), intenta renovarlo una vez con el
- * refresh token antes de reintentar la petición original.
+ * Adjunta a cada llamada a la API el access token de Keycloak (renovándolo antes si está
+ * por vencer). Si la API responde 401 con una sesión abierta, el usuario ya no es válido
+ * (p. ej. fue desactivado), así que se cierra la sesión en Keycloak.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  if (!req.url.startsWith(environment.apiUrl) || esLlamadaPublica(req.method, req.url)) {
+    return next(req);
+  }
+
   const authService = inject(AuthService);
-  const token = authService.getAccessToken();
 
-  const esPublica = esRutaPublica(req.url);
-  const reqConToken =
-    token && !esPublica
-      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-      : req;
-
-  return next(reqConToken).pipe(
+  return from(authService.tokenVigente()).pipe(
+    switchMap((token) =>
+      next(token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req),
+    ),
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !esPublica && authService.getRefreshToken()) {
-        return authService.refresh().pipe(
-          switchMap(() => {
-            const nuevoToken = authService.getAccessToken();
-            const reintento = req.clone({
-              setHeaders: { Authorization: `Bearer ${nuevoToken}` },
-            });
-            return next(reintento);
-          }),
-          catchError((refreshError) => {
-            authService.logout();
-            return throwError(() => refreshError);
-          }),
-        );
+      if (error.status === 401 && authService.estaAutenticado()) {
+        void authService.logout();
       }
       return throwError(() => error);
     }),

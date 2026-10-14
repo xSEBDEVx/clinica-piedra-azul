@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { inicioGuard } from './core/guards/inicio.guard';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,12 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+  },
+  {
+    // Destino de la redirección de Keycloak: envía al usuario a su pantalla según el rol.
+    path: 'inicio',
+    canActivate: [authGuard, inicioGuard],
+    children: [],
   },
   {
     path: 'registro',

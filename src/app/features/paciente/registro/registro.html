@@ -56,7 +56,7 @@
             <label for="password">Contraseña</label>
             <input type="password" id="password" formControlName="password" autocomplete="new-password" />
             <span class="error-campo" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
-                Mínimo 6 caracteres
+                Mínimo 8 caracteres, con al menos una mayúscula y un número
             </span>
         </div>
 

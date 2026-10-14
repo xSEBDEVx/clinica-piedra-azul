@@ -6,6 +6,8 @@ export interface UsuarioDTO {
   login: string;
   rol: RolUsuario;
   activo?: boolean;
+  /** Solo de entrada (registro): el backend la envía a Keycloak y no la guarda. */
+  password?: string;
 }
 
 export interface PacienteDTO {

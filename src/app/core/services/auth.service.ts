@@ -1,18 +1,16 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Injectable, InjectionToken, computed, inject, signal } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import Keycloak from 'keycloak-js';
 import { environment } from '../../../environments/environment';
-import {
-  AuthResponse,
-  LoginRequest,
-  RefreshTokenRequest,
-  RegistroCredencialRequest,
-  RolUsuario,
-} from '../models/auth.model';
+import { RolUsuario } from '../models/auth.model';
+import { UsuarioDTO } from '../models/usuario.model';
 
-const ACCESS_TOKEN_KEY = 'pa_access_token';
-const REFRESH_TOKEN_KEY = 'pa_refresh_token';
-const SESSION_KEY = 'pa_session';
+/** Instancia de keycloak-js; se inyecta por token para poder sustituirla en las pruebas. */
+export const KEYCLOAK = new InjectionToken<Keycloak>('KEYCLOAK', {
+  providedIn: 'root',
+  factory: () => new Keycloak(environment.keycloak),
+});
 
 export interface SesionUsuario {
   usuarioId: number;
@@ -21,54 +19,81 @@ export interface SesionUsuario {
   rol: RolUsuario;
 }
 
+/** Segundos de vigencia mínima con los que se pide el token antes de cada llamada. */
+const VIGENCIA_MINIMA_SEGUNDOS = 30;
+
+/**
+ * Autenticación delegada en Keycloak (Authorization Code + PKCE).
+ *
+ * Keycloak se encarga de las contraseñas, la pantalla de login, las sesiones y la
+ * renovación de tokens. Esta clase solo:
+ *  - inicializa keycloak-js al arrancar la app (restaura la sesión si existe),
+ *  - consulta a la API el perfil del usuario (id y rol, que viven en la base de datos
+ *    de Piedrazul y no en el token) y lo expone como {@link sesion},
+ *  - entrega un token vigente para el interceptor HTTP.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly baseUrl = `${environment.apiUrl}/auth`;
+  private readonly keycloak = inject(KEYCLOAK);
+  private readonly http = inject(HttpClient);
 
-  /** Señal reactiva con la sesión actual (null si no hay usuario autenticado). */
-  private readonly _sesion = signal<SesionUsuario | null>(this.leerSesionGuardada());
+  private readonly _sesion = signal<SesionUsuario | null>(null);
 
+  /** Sesión actual (null si no hay usuario autenticado). */
   readonly sesion = this._sesion.asReadonly();
   readonly estaAutenticado = computed(() => this._sesion() !== null);
   readonly rolActual = computed(() => this._sesion()?.rol ?? null);
 
-  constructor(private http: HttpClient) {}
-
-  login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request).pipe(
-      tap((res) => this.guardarSesion(res)),
-    );
-  }
-
-  /** Usado por el módulo de registro para crear credenciales tras crear el usuario/perfil. */
-  registrarCredencial(request: RegistroCredencialRequest): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/registro`, request);
-  }
-
-  refresh(): Observable<AuthResponse> {
-    const refreshToken = this.getRefreshToken();
-    const body: RefreshTokenRequest = { refreshToken: refreshToken ?? '' };
-    return this.http
-      .post<AuthResponse>(`${this.baseUrl}/refresh`, body)
-      .pipe(tap((res) => this.guardarSesion(res)));
-  }
-
-  logout(): void {
-    const refreshToken = this.getRefreshToken();
-    if (refreshToken) {
-      this.http
-        .post<void>(`${this.baseUrl}/logout`, { refreshToken } as RefreshTokenRequest)
-        .subscribe({ next: () => {}, error: () => {} });
+  /**
+   * Se ejecuta una vez al arrancar (APP_INITIALIZER). Si hay sesión de Keycloak,
+   * carga el perfil del usuario antes de renderizar la app para que los guards
+   * ya conozcan el rol.
+   */
+  async inicializar(): Promise<void> {
+    try {
+      const autenticado = await this.keycloak.init({
+        onLoad: 'check-sso',
+        pkceMethod: 'S256',
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+        checkLoginIframe: false,
+      });
+      if (autenticado) {
+        await this.cargarPerfil();
+      }
+    } catch (error) {
+      // Keycloak inaccesible: la app arranca como visitante en lugar de quedar en blanco.
+      console.error('No fue posible inicializar la autenticación con Keycloak', error);
     }
-    this.limpiarSesion();
   }
 
-  getAccessToken(): string | null {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+  /** Redirige a la pantalla de inicio de sesión de Keycloak. */
+  login(): Promise<void> {
+    return this.keycloak.login({ redirectUri: `${window.location.origin}/inicio` });
   }
 
-  getRefreshToken(): string | null {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+  /** Cierra la sesión en Keycloak y vuelve a la página de inicio. */
+  logout(): Promise<void> {
+    this._sesion.set(null);
+    return this.keycloak.logout({ redirectUri: window.location.origin });
+  }
+
+  /**
+   * Devuelve un access token con vigencia suficiente (lo renueva con Keycloak si está
+   * por vencer), o null si no hay sesión. Si la sesión de Keycloak ya expiró, envía al
+   * usuario a iniciar sesión de nuevo.
+   */
+  async tokenVigente(): Promise<string | null> {
+    if (!this.keycloak.authenticated) {
+      return null;
+    }
+    try {
+      await this.keycloak.updateToken(VIGENCIA_MINIMA_SEGUNDOS);
+    } catch {
+      this._sesion.set(null);
+      await this.login();
+      return null;
+    }
+    return this.keycloak.token ?? null;
   }
 
   tieneRol(...roles: RolUsuario[]): boolean {
@@ -76,33 +101,24 @@ export class AuthService {
     return rol !== null && roles.includes(rol);
   }
 
-  private guardarSesion(res: AuthResponse): void {
-    localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken);
-    const sesion: SesionUsuario = {
-      usuarioId: res.usuarioId,
-      login: res.login,
-      nombreCompleto: res.nombreCompleto,
-      rol: res.rol,
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(sesion));
-    this._sesion.set(sesion);
-  }
-
-  private limpiarSesion(): void {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    localStorage.removeItem(SESSION_KEY);
-    this._sesion.set(null);
-  }
-
-  private leerSesionGuardada(): SesionUsuario | null {
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
+  private async cargarPerfil(): Promise<void> {
     try {
-      return JSON.parse(raw) as SesionUsuario;
-    } catch {
-      return null;
+      const perfil = await firstValueFrom(
+        this.http.get<UsuarioDTO>(`${environment.apiUrl}/users/usuarios/me`),
+      );
+      this._sesion.set({
+        usuarioId: perfil.id!,
+        login: perfil.login,
+        nombreCompleto: perfil.nombreCompleto,
+        rol: perfil.rol,
+      });
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)) {
+        // Autenticó en Keycloak pero no tiene perfil activo en Piedrazul: se cierra la sesión.
+        await this.logout();
+        return;
+      }
+      console.error('No fue posible cargar el perfil del usuario', error);
     }
   }
 }

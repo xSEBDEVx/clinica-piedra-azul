@@ -29,7 +29,11 @@ export class Registro {
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', [Validators.required]],
     login: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    // Misma política que el realm de Keycloak: 8+ caracteres, una mayúscula y un número.
+    password: [
+      '',
+      [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/)],
+    ],
   });
 
   submit(): void {
