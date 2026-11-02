@@ -1,0 +1,72 @@
+<div class="citaPacientes registro" *ngIf="!registroExitoso()">
+    <h2 class="titulo-form">Crear cuenta de paciente</h2>
+    <p class="subtitulo-form">Regístrate para poder agendar tus citas médicas</p>
+
+    <form class="formularioCita" [formGroup]="form" (ngSubmit)="submit()">
+        <app-campo-formulario etiqueta="Nombre completo" para="nombreCompleto">
+            <input type="text" id="nombreCompleto" formControlName="nombreCompleto" />
+            <span class="error-campo" *ngIf="form.get('nombreCompleto')?.invalid && form.get('nombreCompleto')?.touched">
+                Ingresa tu nombre completo
+            </span>
+        </app-campo-formulario>
+
+        <app-campo-formulario etiqueta="Número de documento" para="cedulaIdentidad">
+            <input type="text" id="cedulaIdentidad" formControlName="cedulaIdentidad" />
+            <span class="error-campo" *ngIf="form.get('cedulaIdentidad')?.invalid && form.get('cedulaIdentidad')?.touched">
+                El número de documento es obligatorio
+            </span>
+        </app-campo-formulario>
+
+        <app-campo-formulario etiqueta="Correo electrónico" para="email">
+            <input type="email" id="email" formControlName="email" autocomplete="email" />
+            <span class="error-campo" *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched">
+                El correo es obligatorio
+            </span>
+            <span class="error-campo" *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
+                Ingresa un correo electrónico válido
+            </span>
+        </app-campo-formulario>
+
+        <app-campo-formulario etiqueta="Nombre de usuario" para="login">
+            <input type="text" id="login" formControlName="login" autocomplete="username" />
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('required') && form.get('login')?.touched">
+                El nombre de usuario es obligatorio
+            </span>
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('minlength') && form.get('login')?.touched">
+                Debe tener al menos 3 caracteres
+            </span>
+            <span class="error-campo" *ngIf="form.get('login')?.hasError('maxlength') && form.get('login')?.touched">
+                Máximo 50 caracteres
+            </span>
+        </app-campo-formulario>
+
+        <app-campo-formulario etiqueta="Teléfono" para="telefono">
+            <input type="tel" id="telefono" formControlName="telefono" />
+            <span class="error-campo" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+                El teléfono es obligatorio
+            </span>
+        </app-campo-formulario>
+
+        <app-campo-formulario etiqueta="Contraseña" para="password">
+            <input type="password" id="password" formControlName="password" autocomplete="new-password" />
+            <span class="error-campo" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+                Mínimo 8 caracteres, con al menos una mayúscula y un número
+            </span>
+        </app-campo-formulario>
+
+        <app-alerta *ngIf="errorMensaje()">{{ errorMensaje() }}</app-alerta>
+
+        <button app-boton variante="pildora-claro" type="submit" [disabled]="cargando()">
+            {{ cargando() ? 'Creando cuenta…' : 'Crear cuenta' }}
+        </button>
+    </form>
+
+    <p class="enlace-registro">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    </p>
+</div>
+
+<div class="citaPacientes registro confirmacion" *ngIf="registroExitoso()">
+    <h2 class="titulo-form">¡Cuenta creada con éxito!</h2>
+    <p class="subtitulo-form">Ya puedes iniciar sesión para agendar tu cita. Te redirigiremos en un momento…</p>
+</div>

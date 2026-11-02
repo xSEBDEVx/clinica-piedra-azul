@@ -1,0 +1,23 @@
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge-programada {
+  background-color: #E6F4EA;
+  color: #1E7E34;
+}
+
+.badge-cancelada {
+  background-color: #FDEDEC;
+  color: #B3261E;
+}
+
+.badge-completada {
+  background-color: #E8EAED;
+  color: #3C4043;
+}

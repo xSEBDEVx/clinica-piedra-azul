@@ -1,0 +1,49 @@
+<div class="consultaCitas">
+  <h1>Consulta de citas</h1>
+  <p class="descripcion">Selecciona una fecha y un médico o terapista para ver su agenda y exportarla.</p>
+
+  <form class="filtros" [formGroup]="form" (ngSubmit)="consultar()">
+    <app-campo-formulario etiqueta="Médico o terapista" para="profesionalId">
+      <select id="profesionalId" formControlName="profesionalId">
+        <option [ngValue]="null" disabled>Selecciona un médico o terapista</option>
+        <option *ngFor="let p of profesionales()" [ngValue]="p.id">
+          {{ p.nombreCompleto }} — {{ p.especialidadNombre }}
+        </option>
+      </select>
+    </app-campo-formulario>
+
+    <app-campo-formulario etiqueta="Fecha" para="fecha">
+      <input type="date" id="fecha" formControlName="fecha" />
+    </app-campo-formulario>
+
+    <button app-boton type="submit" [disabled]="cargando()">
+      {{ cargando() ? 'Consultando…' : 'Consultar' }}
+    </button>
+  </form>
+
+  <app-alerta *ngIf="errorMensaje()">{{ errorMensaje() }}</app-alerta>
+
+  <section class="resultados" *ngIf="consultaRealizada() && !cargando()">
+    <app-resumen-total [total]="totalCitas() + ' cita(s) registrada(s)'">
+      Médico/Terapista: <strong>{{ profesionalSeleccionado?.nombreCompleto }}</strong>
+    </app-resumen-total>
+
+    <p class="sinCitas" *ngIf="citas().length === 0">
+      No hay citas registradas para el médico o terapista y la fecha seleccionados.
+    </p>
+
+    <app-tabla-citas *ngIf="citas().length > 0" [citas]="citas()" [columnas]="['hora', 'paciente', 'estado']" />
+
+    <!-- HU-1.2: exportar y descargar -->
+    <div class="acciones-exportar" *ngIf="citas().length > 0">
+      <button type="button" class="btn-exportar" (click)="exportar()" [disabled]="exportando()">
+        {{ exportando() ? 'Generando archivo…' : 'Exportar a CSV' }}
+      </button>
+
+      <div class="archivo-listo" *ngIf="archivoExportado() as archivo">
+        <span>Archivo listo: <strong>{{ archivo.nombre }}</strong> ({{ tamanoArchivo() }})</span>
+        <button type="button" class="btn-descargar" (click)="descargar()">Descargar archivo</button>
+      </div>
+    </div>
+  </section>
+</div>

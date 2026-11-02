@@ -1,0 +1,45 @@
+:host {
+    background-color: #005092;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+:host(:hover:not(:disabled)) {
+    background-color: #003a6b;
+}
+
+:host(:disabled) {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Rectangular (consultar / guardar) */
+:host([data-variante='primario']) {
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 14px;
+    height: 44px;
+}
+
+/* Redondeado azul oscuro (agendar cita) */
+:host([data-variante='pildora']) {
+    border-radius: 20px;
+    padding: 12px 24px;
+    font-size: 15px;
+}
+
+/* Redondeado azul claro (registro) */
+:host([data-variante='pildora-claro']) {
+    background-color: #0081C6;
+    border-radius: 20px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+:host([data-variante='pildora-claro']:hover:not(:disabled)) {
+    background-color: #005092;
+}

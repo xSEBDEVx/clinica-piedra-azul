@@ -1,0 +1,58 @@
+.citaPacientes {
+    background-color: #FFFFFF;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 460px;
+    margin: 20px auto;
+}
+
+.titulo-form {
+    color: #005092;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitulo-form {
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.formularioCita {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* El flex del formulario ya separa con gap; la alerta no necesita margen propio. */
+app-alerta {
+    margin-top: 0;
+}
+
+.enlace-registro {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13.5px;
+    color: #5F6368;
+}
+
+.enlace-registro a {
+    color: #0081C6;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.enlace-registro a:hover {
+    text-decoration: underline;
+}
+
+.confirmacion {
+    text-align: center;
+}
+
+.confirmacion .titulo-form {
+    color: #1E7E34;
+}

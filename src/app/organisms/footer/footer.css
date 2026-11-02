@@ -1,0 +1,30 @@
+:host {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.pie-pagina-mini {
+    background-color: #f8f9fa;
+    color: #5f6368;
+    border-top: 1px solid #dadce0;
+    padding: 15px 30px;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.separador {
+    color: #dadce0;
+}

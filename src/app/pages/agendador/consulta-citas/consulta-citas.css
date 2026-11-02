@@ -1,0 +1,93 @@
+.consultaCitas {
+  background-color: #FFFFFF;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.descripcion {
+  color: #5F6368;
+  margin-bottom: 24px;
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.resultados {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #EEE;
+}
+
+.sinCitas {
+  color: #5F6368;
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .filtros {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* HU-1.2: exportar / descargar */
+.acciones-exportar {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-exportar,
+.btn-descargar {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-exportar {
+  background-color: #FFFFFF;
+  color: #005092;
+  border: 1px solid #005092;
+}
+
+.btn-exportar:hover:not(:disabled) {
+  background-color: #E8F0FE;
+}
+
+.btn-exportar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.archivo-listo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #3C4043;
+  background-color: #E6F4EA;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.btn-descargar {
+  background-color: #005092;
+  color: #FFFFFF;
+  border: none;
+}
+
+.btn-descargar:hover {
+  background-color: #003a6b;
+}

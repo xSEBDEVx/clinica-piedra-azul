@@ -1,0 +1,36 @@
+<table class="tablaCitas">
+  <thead>
+    <tr>
+      @for (columna of columnas(); track columna) {
+        <th>{{ etiqueta(columna) }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (cita of citas(); track cita.id ?? $index) {
+      <tr>
+        @for (columna of columnas(); track columna) {
+          <td>
+            @switch (columna) {
+              @case ('fecha') {
+                {{ cita.fechaHora | date: 'dd/MM/yyyy':'-0500':'es-CO' }}
+              }
+              @case ('hora') {
+                {{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}
+              }
+              @case ('paciente') {
+                {{ cita.pacienteNombre }}
+              }
+              @case ('profesional') {
+                {{ cita.profesionalNombre }}
+              }
+              @case ('estado') {
+                <app-badge-estado [estado]="cita.estado" />
+              }
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
