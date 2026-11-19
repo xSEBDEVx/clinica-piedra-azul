@@ -1,0 +1,25 @@
+.reportes {
+  background-color: #FFFFFF;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.descripcion { color: #5F6368; margin-bottom: 24px; }
+.filtros { max-width: 200px; }
+.cargando, .sinDatos { color: #5F6368; font-size: 14px; }
+.total { color: #5F6368; margin: 20px 0 8px; }
+
+svg { width: 100%; height: auto; }
+.grilla { stroke: #E3E6EA; stroke-width: 1; }
+.etiquetaY { text-anchor: end; font-size: 12px; fill: #5F6368; }
+.etiquetaX { text-anchor: middle; font-size: 12px; fill: #5F6368; }
+.tituloEje { text-anchor: middle; font-size: 12px; fill: #5F6368; }
+.linea { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+
+.leyenda { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0; margin: 12px 0 0; font-size: 14px; }
+.leyenda li { display: flex; align-items: center; gap: 8px; }
+.muestra { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+
+@media (max-width: 640px) { .reportes { padding: 20px; } }

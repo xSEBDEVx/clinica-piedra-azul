@@ -1,0 +1,44 @@
+.misCitas {
+  background-color: #FFFFFF;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.descripcion { color: #5F6368; margin-bottom: 24px; }
+.cargando, .sinCitas { color: #5F6368; font-size: 14px; }
+
+.tablaMisCitas { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tablaMisCitas th, .tablaMisCitas td {
+  text-align: left; padding: 10px 12px; border-bottom: 1px solid #EEE; vertical-align: top;
+}
+.tablaMisCitas th { color: #5F6368; font-weight: 600; }
+
+.motivo, .noCancelable { display: block; color: #5F6368; margin-top: 4px; font-size: 12px; }
+
+.btnCancelar {
+  background: #FFFFFF; color: #B3261E; border: 1px solid #B3261E;
+  border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 13px;
+}
+.btnCancelar:hover { background: #FDECEA; }
+
+.panelCancelacion {
+  margin-top: 28px; padding: 20px; border: 1px solid #D5E3F0;
+  border-radius: 10px; background: #F5F9FD;
+}
+.panelCancelacion dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0 0 16px; }
+.panelCancelacion dt { font-weight: 600; }
+.panelCancelacion dd { margin: 0; }
+textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #CCC; border-radius: 8px; font: inherit; resize: vertical; }
+
+.acciones { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+.btnVolver {
+  background: none; border: none; color: #005092; cursor: pointer; font-size: 14px; text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .misCitas { padding: 20px; }
+  .tablaMisCitas { display: block; overflow-x: auto; }
+}

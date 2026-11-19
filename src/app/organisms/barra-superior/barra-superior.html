@@ -12,8 +12,10 @@
 
   <nav class="navPrivada" *ngIf="authService.estaAutenticado()">
     <a *ngIf="authService.tieneRol('paciente')" routerLink="/agendar-cita" routerLinkActive="activo">Agendar cita</a>
+    <a *ngIf="authService.tieneRol('paciente')" routerLink="/mis-citas" routerLinkActive="activo">Mis citas</a>
     <a *ngIf="authService.tieneRol('profesional','agendador','administrador')" routerLink="/consulta-citas" routerLinkActive="activo">Consultar citas</a>
     <a *ngIf="authService.tieneRol('profesional','agendador','administrador')" routerLink="/historial-citas" routerLinkActive="activo">Historial de paciente</a>
+    <a *ngIf="authService.tieneRol('profesional','administrador')" routerLink="/reportes" routerLinkActive="activo">Reportes</a>
     <a *ngIf="authService.tieneRol('administrador')" routerLink="/admin/configuracion-agenda" routerLinkActive="activo">Configurar agenda</a>
     <span class="usuarioActivo">{{ authService.sesion()?.nombreCompleto }}</span>
     <button class="btnSalir" (click)="cerrarSesion()">Cerrar sesión</button>

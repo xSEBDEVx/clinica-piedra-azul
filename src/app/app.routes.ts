@@ -30,6 +30,20 @@ export const routes: Routes = [
       import('./pages/paciente/agendar-cita/agendar-cita').then((m) => m.AgendarCita),
   },
   {
+    // HU-2.3: citas del paciente y cancelación con justificación
+    path: 'mis-citas',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['paciente'] },
+    loadComponent: () => import('./pages/paciente/mis-citas/mis-citas').then((m) => m.MisCitas),
+  },
+  {
+    // HU-5.1: reporte gráfico de citas por mes y por médico
+    path: 'reportes',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['profesional', 'administrador'] },
+    loadComponent: () => import('./pages/profesional/reportes/reportes').then((m) => m.Reportes),
+  },
+  {
     path: 'consulta-citas',
     canActivate: [authGuard, roleGuard],
     data: { roles: ['profesional', 'agendador', 'administrador'] },

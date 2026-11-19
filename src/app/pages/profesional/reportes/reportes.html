@@ -1,0 +1,62 @@
+<div class="reportes">
+  <h1>Reporte de citas por mes</h1>
+  <p class="descripcion">
+    Selecciona un año para ver la cantidad de citas de cada médico/terapista en cada mes.
+  </p>
+
+  <form class="filtros" [formGroup]="form">
+    <app-campo-formulario etiqueta="Año" para="anio">
+      <select id="anio" formControlName="anio" (change)="generar()">
+        <option *ngFor="let a of anios" [ngValue]="a">{{ a }}</option>
+      </select>
+    </app-campo-formulario>
+  </form>
+
+  <app-alerta *ngIf="errorMensaje()">{{ errorMensaje() }}</app-alerta>
+  <p class="cargando" *ngIf="cargando()">Generando reporte…</p>
+
+  <!-- SC-6: sin citas en el año no se muestran cantidades que parezcan datos reales -->
+  <p class="sinDatos" *ngIf="!cargando() && reporte() && reporte()!.totalCitas === 0">
+    No hay citas registradas para el año {{ reporte()!.anio }}.
+  </p>
+
+  <section class="grafico" *ngIf="!cargando() && reporte() && reporte()!.totalCitas > 0">
+    <p class="total">
+      Total de citas en {{ reporte()!.anio }}: <strong>{{ reporte()!.totalCitas }}</strong>
+    </p>
+
+    <svg
+      [attr.viewBox]="'0 0 ' + ancho + ' ' + alto"
+      role="img"
+      [attr.aria-label]="'Citas por mes y por médico, año ' + reporte()!.anio"
+    >
+      <!-- Cuadrícula y eje Y -->
+      @for (m of marcasY(); track m.valor) {
+        <line [attr.x1]="margen.izquierda" [attr.x2]="ancho - margen.derecha" [attr.y1]="m.y" [attr.y2]="m.y" class="grilla" />
+        <text [attr.x]="margen.izquierda - 8" [attr.y]="m.y + 4" class="etiquetaY">{{ m.valor }}</text>
+      }
+      <text class="tituloEje" transform="rotate(-90)" [attr.x]="-(alto - margen.abajo) / 2" y="14">Cantidad de citas</text>
+
+      <!-- Eje X: meses -->
+      @for (m of marcasX; track m.mes) {
+        <text [attr.x]="m.x" [attr.y]="alto - margen.abajo + 20" class="etiquetaX">{{ m.mes }}</text>
+      }
+
+      <!-- Una serie por médico -->
+      @for (s of series(); track s.nombre) {
+        <polyline [attr.points]="s.linea" [attr.stroke]="s.color" class="linea" />
+        @for (p of s.puntos; track p.mes) {
+          <circle [attr.cx]="p.x" [attr.cy]="p.y" r="4" [attr.fill]="s.color">
+            <title>{{ s.nombre }} — {{ p.mes }}: {{ p.valor }} cita(s)</title>
+          </circle>
+        }
+      }
+    </svg>
+
+    <ul class="leyenda">
+      @for (s of series(); track s.nombre) {
+        <li><span class="muestra" [style.background]="s.color"></span>{{ s.nombre }} ({{ s.total }})</li>
+      }
+    </ul>
+  </section>
+</div>

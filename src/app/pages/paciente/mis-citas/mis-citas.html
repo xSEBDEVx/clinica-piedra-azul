@@ -1,0 +1,87 @@
+<div class="misCitas">
+  <h1>Mis citas</h1>
+  <p class="descripcion">
+    Consulta tus citas y cancela las que ya no necesites. Una cita solo puede cancelarse con al menos
+    2 días de anticipación y debes indicar el motivo.
+  </p>
+
+  <app-alerta *ngIf="errorMensaje()">{{ errorMensaje() }}</app-alerta>
+  <app-alerta tipo="exito" *ngIf="exitoMensaje()">{{ exitoMensaje() }}</app-alerta>
+
+  <p class="cargando" *ngIf="cargando()">Cargando tus citas…</p>
+  <p class="sinCitas" *ngIf="!cargando() && !errorMensaje() && citas().length === 0">
+    Aún no tienes citas registradas.
+  </p>
+
+  <table class="tablaMisCitas" *ngIf="citas().length > 0">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Médico/Terapista</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (cita of citas(); track cita.id) {
+        <tr>
+          <td>{{ cita.fechaHora | date: 'dd/MM/yyyy':'-0500':'es-CO' }}</td>
+          <td>{{ cita.fechaHora | date: 'h:mm a':'-0500':'es-CO' }}</td>
+          <td>{{ cita.profesionalNombre }}</td>
+          <td>
+            <app-badge-estado [estado]="cita.estado" />
+            <small class="motivo" *ngIf="cita.estado === 'cancelada' && cita.motivoCancelacion">
+              Motivo: {{ cita.motivoCancelacion }}
+            </small>
+          </td>
+          <td>
+            @if (puedeCancelar(cita)) {
+              <button type="button" class="btnCancelar" (click)="seleccionarParaCancelar(cita)">
+                Cancelar
+              </button>
+            } @else if (esActiva(cita)) {
+              <small class="noCancelable">Ya no puede cancelarse (menos de 2 días)</small>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <section class="panelCancelacion" *ngIf="citaACancelar() as cita">
+    <h3>Cancelar cita</h3>
+    <dl>
+      <dt>Médico</dt>
+      <dd>{{ cita.profesionalNombre }}</dd>
+      <dt>Fecha y hora</dt>
+      <dd>{{ cita.fechaHora | date: 'EEEE d MMMM y, h:mm a':'-0500':'es-CO' }}</dd>
+    </dl>
+
+    <form [formGroup]="form" (ngSubmit)="confirmarCancelacion()">
+      <app-campo-formulario etiqueta="Justificación de la cancelación" para="motivo">
+        <textarea
+          id="motivo"
+          formControlName="motivo"
+          rows="3"
+          maxlength="500"
+          placeholder="Cuéntanos por qué cancelas la cita"
+        ></textarea>
+        <small class="error-campo" *ngIf="form.get('motivo')?.touched && form.get('motivo')?.invalid">
+          La justificación es obligatoria.
+        </small>
+      </app-campo-formulario>
+
+      <app-alerta *ngIf="errorCancelacion()">{{ errorCancelacion() }}</app-alerta>
+
+      <div class="acciones">
+        <button app-boton type="submit" [disabled]="cancelando()">
+          {{ cancelando() ? 'Cancelando…' : 'Confirmar cancelación' }}
+        </button>
+        <button type="button" class="btnVolver" (click)="descartarCancelacion()" [disabled]="cancelando()">
+          Volver
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

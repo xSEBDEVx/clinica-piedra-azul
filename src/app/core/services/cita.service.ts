@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CitaDTO, EstadoCita, HistorialCitasPacienteDTO } from '../models/scheduling.model';
+import {
+  CitaDTO,
+  EstadoCita,
+  HistorialCitasPacienteDTO,
+  ReporteCitasMensualDTO,
+} from '../models/scheduling.model';
 
 @Injectable({ providedIn: 'root' })
 export class CitaService {
@@ -72,6 +77,18 @@ export class CitaService {
 
   cancelar(id: number): Observable<CitaDTO> {
     return this.http.patch<CitaDTO>(`${this.baseUrl}/${id}/cancelar`, {});
+  }
+
+  /** HU-2.3: el paciente cancela su propia cita indicando la justificación. */
+  cancelarComoPaciente(id: number, motivo: string): Observable<CitaDTO> {
+    return this.http.patch<CitaDTO>(`${this.baseUrl}/${id}/cancelar-paciente`, { motivo });
+  }
+
+  /** HU-5.1: cantidad de citas por mes y por médico en un año. */
+  reporteMensual(anio: number): Observable<ReporteCitasMensualDTO> {
+    return this.http.get<ReporteCitasMensualDTO>(`${this.baseUrl}/reportes/mensual`, {
+      params: { anio },
+    });
   }
 
   completar(id: number): Observable<CitaDTO> {

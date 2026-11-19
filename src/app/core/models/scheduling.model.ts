@@ -8,6 +8,8 @@ export interface CitaDTO {
   profesionalNombre?: string;
   fechaHora: string; // ISO ZonedDateTime, ej. 2026-09-20T09:00:00-05:00
   estado?: EstadoCita;
+  /** HU-2.3: justificación de la cancelación. */
+  motivoCancelacion?: string;
 }
 
 export interface DisponibilidadSemanalDTO {
@@ -40,4 +42,19 @@ export interface HistorialCitasPacienteDTO {
   pacienteNombre: string;
   cedulaIdentidad: string;
   citas: CitaDTO[];
+}
+
+/** HU-5.1: citas por mes (12 valores, enero..diciembre) de un médico. */
+export interface SerieMedicoDTO {
+  profesionalId: number;
+  profesionalNombre: string;
+  citasPorMes: number[];
+  total: number;
+}
+
+/** HU-5.1: reporte anual de citas por mes y por médico. */
+export interface ReporteCitasMensualDTO {
+  anio: number;
+  totalCitas: number;
+  series: SerieMedicoDTO[];
 }
