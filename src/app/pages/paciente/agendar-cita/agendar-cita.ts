@@ -12,6 +12,7 @@ import { CitaDTO } from '../../../core/models/scheduling.model';
 import { Alerta } from '../../../atoms/alerta/alerta';
 import { Boton } from '../../../atoms/boton/boton';
 import { CampoFormulario } from '../../../molecules/campo-formulario/campo-formulario';
+import { Calendario, aISOLocal } from '../../../molecules/calendario/calendario';
 
 interface FranjaHoraria {
   valor: string; // ISO ZonedDateTime devuelto por el backend
@@ -21,7 +22,7 @@ interface FranjaHoraria {
 @Component({
   selector: 'app-agendar-cita',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Alerta, Boton, CampoFormulario],
+  imports: [CommonModule, ReactiveFormsModule, Alerta, Boton, CampoFormulario, Calendario],
   templateUrl: './agendar-cita.html',
   styleUrl: './agendar-cita.css',
 })
@@ -100,8 +101,18 @@ export class AgendarCita implements OnInit {
     });
   }
 
-  seleccionarFranja(franja: FranjaHoraria): void {
+  seleccionarFranja(franja: FranjaHoraria | null): void {
     this.franjaSeleccionada.set(franja);
+  }
+
+  /** El selector de horarios entrega el valor ISO de la franja elegida. */
+  elegirFranjaPorValor(valor: string): void {
+    this.seleccionarFranja(this.franjas().find((f) => f.valor === valor) ?? null);
+  }
+
+  /** El calendario entrega la fecha elegida (yyyy-MM-dd). */
+  elegirFecha(fecha: string): void {
+    this.form.get('fecha')?.setValue(fecha);
   }
 
   confirmarCita(): void {
@@ -145,6 +156,7 @@ export class AgendarCita implements OnInit {
   }
 
   private hoyISO(): string {
-    return new Date().toISOString().slice(0, 10);
+    // Fecha local (toISOString usa UTC y adelanta el día por las noches en Colombia).
+    return aISOLocal(new Date());
   }
 }

@@ -11,13 +11,12 @@
 .tarjeta {
     background-color: #FFFFFF;
     padding: 28px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--borde);
 }
 
 .tarjeta h2 {
     font-size: 18px;
-    color: #202124;
+    color: var(--texto);
     font-weight: 600;
     margin-bottom: 4px;
 }
@@ -50,7 +49,7 @@
 
 .listaDisponibilidad h3 {
     font-size: 15px;
-    color: #202124;
+    color: var(--texto);
     margin-bottom: 12px;
 }
 
@@ -84,7 +83,7 @@
     border: 1px solid #E3E3E3;
     color: #B3261E;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 0;
     font-size: 12.5px;
     cursor: pointer;
     transition: background-color 0.2s;

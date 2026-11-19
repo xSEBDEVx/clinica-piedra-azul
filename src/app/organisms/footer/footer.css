@@ -1,30 +1,23 @@
-:host {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
+:host { display: block; grid-row: 3; grid-column: 1 / -1; }
 
-.pie-pagina-mini {
-    background-color: #f8f9fa;
-    color: #5f6368;
-    border-top: 1px solid #dadce0;
-    padding: 15px 30px;
-    font-size: 13px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-}
+.pie { background: var(--marino); color: #FFF; padding: 40px 80px 28px; }
+.fila { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
 
-.footer-info {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+.enlaces { display: flex; gap: 32px; }
+.enlaces a { color: #FFF; text-decoration: none; font-weight: 500; font-size: 14px; }
+.enlaces a:hover { text-decoration: underline; }
 
-.separador {
-    color: #dadce0;
+.marcaPie { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; color: #E0E0E0; }
+.marcaPie img { height: 30px; width: auto; }
+
+.redes { display: flex; justify-content: flex-end; gap: 28px; }
+.redes svg { width: 20px; height: 20px; fill: none; stroke: #FFF; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.derechos { margin-top: 48px; text-align: center; font-size: 13px; color: #FFF; }
+
+@media (max-width: 800px) {
+    .pie { padding: 28px 20px; }
+    .fila { grid-template-columns: 1fr; justify-items: center; }
+    .redes { justify-content: center; }
+    .derechos { margin-top: 24px; }
 }

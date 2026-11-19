@@ -1,14 +1,50 @@
-.pantallaCompleta {
+.app {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #F6F8FC;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    background-color: var(--fondo);
 }
+.app.conLateral { grid-template-columns: 256px 1fr; }
 
-.areaPrincipal {
-    flex: 1;
+/* Fila central: contenido (y manchas decorativas). */
+.escenario {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+    min-height: 560px;
+}
+.conLateral .escenario { grid-column: 2; }
+
+.contenido {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 24px 60px;
+    padding: 56px 24px 72px;
+}
+
+.mancha {
+    position: absolute;
+    background-color: var(--marino);
+    z-index: 0;
+    pointer-events: none;
+}
+/* Formas orgánicas aproximadas a las del prototipo. */
+.manchaIzq {
+    width: 256px; height: 240px; left: 80px; top: 24%;
+    border-radius: 58% 42% 46% 54% / 36% 62% 38% 64%;
+}
+.conLateral .manchaIzq { left: -176px; width: 256px; height: 190px; top: 22%; }
+.manchaDer {
+    width: 381px; height: 334px; right: 134px; top: 24%;
+    border-radius: 48% 52% 62% 38% / 42% 48% 52% 58%;
+}
+@media (max-width: 1100px) { .mancha { display: none; } }
+
+@media (max-width: 800px) {
+    .app.conLateral { grid-template-columns: 1fr; }
+    .conLateral .escenario { grid-column: 1; }
 }

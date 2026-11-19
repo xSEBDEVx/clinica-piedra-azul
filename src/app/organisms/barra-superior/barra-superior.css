@@ -1,109 +1,63 @@
-:host {
-    /* El host no genera caja: el header sigue siendo hijo directo del layout (sticky). */
-    display: contents;
-}
+:host { display: contents; }
 
+.ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+.marca { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #6F6F6F; font-weight: 700; font-size: 18px; }
+.logoTopbar { height: 28px; width: auto; }
+
+/* ── Barra superior pública ── */
 .barraSuperior {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 32px;
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    grid-row: 1; grid-column: 1 / -1;
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; padding: 0 16px;
+    background: #FFF; border-bottom: 1px solid var(--borde);
 }
+.btnHamburguesa { background: none; border: none; color: var(--marino); cursor: pointer; padding: 8px; display: flex; }
 
-.marca {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: #005092;
-    font-weight: 700;
-    font-size: 18px;
+.menuDesplegable {
+    position: absolute; top: 64px; right: 0; min-width: 220px;
+    background: #FFF; border: 1px solid var(--borde); box-shadow: 0 8px 16px rgba(0,0,0,.12);
+    display: flex; flex-direction: column;
 }
+.menuDesplegable a { padding: 14px 20px; color: var(--texto); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--borde); }
+.menuDesplegable a:hover { background: var(--campo); }
+.menuDesplegable a.activo { box-shadow: inset 3px 0 0 var(--accion); }
+.menuDesplegable a.destacado { background: var(--accion); color: #FFF; border-bottom: none; }
+.menuDesplegable a.destacado:hover { background: var(--accion-hover); }
 
-.logoTopbar {
-    height: 36px;
-    width: auto;
+/* ── Barra lateral ── */
+.barraLateral {
+    grid-row: 2; grid-column: 1;
+    background: #FFF; border-right: 1px solid var(--borde);
+    padding: 24px 16px;
+    display: flex; flex-direction: column; gap: 20px;
 }
+.barraLateral .marca { justify-content: center; }
+.barraLateral .logoTopbar { height: 32px; }
 
-.navPublica,
-.navPrivada {
-    display: flex;
-    align-items: center;
-    gap: 22px;
+.usuario { display: flex; align-items: center; gap: 10px; }
+.avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--campo); color: #A8A8A8;
+    display: flex; align-items: center; justify-content: center; flex: none;
 }
+.nombreUsuario { flex: 1; font-size: 13px; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btnIcono { background: none; border: none; color: var(--marino); cursor: pointer; padding: 6px; display: flex; }
+.btnIcono:hover { color: var(--accion); }
 
-.navPublica a,
-.navPrivada a {
-    text-decoration: none;
-    color: #3C4043;
-    font-weight: 500;
-    font-size: 14px;
-    padding: 8px 4px;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
+.buscador { display: flex; align-items: center; gap: 8px; padding: 0 12px; background: var(--campo); border-bottom: 1px solid var(--linea); color: #6F6F6F; }
+.buscador input { background: none; border: none; min-height: 44px; padding: 0; outline: none; }
+.buscador:focus-within { outline: 2px solid var(--accion); outline-offset: -2px; }
+
+.menuLateral { display: flex; flex-direction: column; }
+.menuLateral a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 8px; text-decoration: none; color: var(--texto);
+    font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--borde);
 }
+.menuLateral a:hover { background: var(--campo); }
+.menuLateral a.activo { background: var(--campo); box-shadow: inset 3px 0 0 var(--accion); }
 
-.navPublica a:hover,
-.navPrivada a:hover {
-    color: #005092;
-}
-
-.navPublica a.activo,
-.navPrivada a.activo {
-    color: #005092;
-    border-bottom-color: #0081C6;
-}
-
-.navPublica a.btnLoginAgenda {
-    background-color: #0081C6;
-    color: white;
-    padding: 9px 18px;
-    border-radius: 8px;
-    border-bottom: none;
-}
-
-.navPublica a.btnLoginAgenda:hover {
-    background-color: #005092;
-    color: white;
-}
-
-.usuarioActivo {
-    font-size: 14px;
-    color: #5F6368;
-    padding-left: 6px;
-    border-left: 1px solid #E3E3E3;
-}
-
-.btnSalir {
-    background-color: transparent;
-    color: #B3261E;
-    border: 1px solid #E3E3E3;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.btnSalir:hover {
-    background-color: #FDEDEC;
-}
-
-@media (max-width: 720px) {
-    .barraSuperior {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-    }
-    .navPublica,
-    .navPrivada {
-        flex-wrap: wrap;
-        gap: 12px;
-    }
+@media (max-width: 800px) {
+    .barraLateral { grid-row: 1; grid-column: 1; border-right: none; border-bottom: 1px solid var(--borde); }
 }

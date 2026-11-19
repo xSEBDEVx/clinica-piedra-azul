@@ -1,4 +1,4 @@
-<div class="citaPacientes registro" *ngIf="!registroExitoso()">
+<div class="citaPacientes registro formularioCentrado" *ngIf="!registroExitoso()">
     <h2 class="titulo-form">Crear cuenta de paciente</h2>
     <p class="subtitulo-form">Regístrate para poder agendar tus citas médicas</p>
 
@@ -48,7 +48,16 @@
         </app-campo-formulario>
 
         <app-campo-formulario etiqueta="Contraseña" para="password">
-            <input type="password" id="password" formControlName="password" autocomplete="new-password" />
+            <div class="conOjo">
+                <input [type]="mostrarPassword() ? 'text' : 'password'" id="password" formControlName="password" autocomplete="new-password" />
+                <button type="button" class="ojo" (click)="mostrarPassword.set(!mostrarPassword())"
+                        [attr.aria-label]="mostrarPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        @if (mostrarPassword()) { <line x1="3" y1="21" x2="21" y2="3"/> }
+                    </svg>
+                </button>
+            </div>
             <span class="error-campo" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
                 Mínimo 8 caracteres, con al menos una mayúscula y un número
             </span>
@@ -66,7 +75,7 @@
     </p>
 </div>
 
-<div class="citaPacientes registro confirmacion" *ngIf="registroExitoso()">
+<div class="citaPacientes registro confirmacion formularioCentrado" *ngIf="registroExitoso()">
     <h2 class="titulo-form">¡Cuenta creada con éxito!</h2>
     <p class="subtitulo-form">Ya puedes iniciar sesión para agendar tu cita. Te redirigiremos en un momento…</p>
 </div>

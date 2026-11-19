@@ -23,6 +23,7 @@ export class Registro {
   private readonly router = inject(Router);
 
   readonly cargando = signal(false);
+  readonly mostrarPassword = signal(false);
   readonly errorMensaje = signal<string | null>(null);
   readonly registroExitoso = signal(false);
 

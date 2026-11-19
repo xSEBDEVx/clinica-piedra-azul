@@ -1,0 +1,41 @@
+<div class="calendario">
+  <div class="cabecera">
+    <button type="button" class="flecha" (click)="cambiarMes(-1)" aria-label="Mes anterior">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+
+    <select class="selector" [value]="mes()" (change)="elegirMes($any($event.target).value)" aria-label="Mes">
+      @for (m of meses; track $index) {
+        <option [value]="$index" [selected]="$index === mes()">{{ m }}</option>
+      }
+    </select>
+    <select class="selector" [value]="anio()" (change)="elegirAnio($any($event.target).value)" aria-label="Año">
+      @for (a of anios(); track a) {
+        <option [value]="a" [selected]="a === anio()">{{ a }}</option>
+      }
+    </select>
+
+    <button type="button" class="flecha" (click)="cambiarMes(1)" aria-label="Mes siguiente">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="rejilla">
+    @for (d of dias; track d) {
+      <span class="diaSemana">{{ d }}</span>
+    }
+    @for (c of celdas(); track c.fecha) {
+      <button
+        type="button"
+        class="dia"
+        [class.otroMes]="!c.delMes"
+        [class.deshabilitado]="c.delMes && !c.habilitada"
+        [class.elegido]="c.fecha === valor()"
+        [disabled]="!c.habilitada"
+        (click)="elegir(c)"
+      >
+        {{ c.dia }}
+      </button>
+    }
+  </div>
+</div>

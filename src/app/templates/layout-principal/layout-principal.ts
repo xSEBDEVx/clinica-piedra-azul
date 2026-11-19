@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BarraSuperior } from '../../organisms/barra-superior/barra-superior';
 import { Footer } from '../../organisms/footer/footer';
+import { AuthService } from '../../core/services/auth.service';
 
-/** Template: estructura base de todas las páginas (barra superior, contenido y pie). */
+/**
+ * Template: estructura base de todas las páginas.
+ * Sin sesión: barra superior + contenido + pie. Con sesión: barra lateral a la izquierda.
+ */
 @Component({
   selector: 'app-layout-principal',
   standalone: true,
@@ -11,4 +15,6 @@ import { Footer } from '../../organisms/footer/footer';
   templateUrl: './layout-principal.html',
   styleUrl: './layout-principal.css',
 })
-export class LayoutPrincipal {}
+export class LayoutPrincipal {
+  readonly authService = inject(AuthService);
+}

@@ -1,9 +1,15 @@
-<div class="pantallaCompleta">
+<div class="app" [class.conLateral]="authService.estaAutenticado()">
   <app-barra-superior></app-barra-superior>
 
-  <main class="areaPrincipal">
-    <router-outlet></router-outlet>
-  </main>
+  <div class="escenario">
+    <!-- Manchas decorativas de los prototipos -->
+    <span class="mancha manchaIzq" aria-hidden="true"></span>
+    <span class="mancha manchaDer" aria-hidden="true"></span>
+
+    <main class="contenido">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 
   <app-footer></app-footer>
 </div>

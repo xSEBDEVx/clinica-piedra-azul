@@ -1,9 +1,8 @@
 .historialCitas {
   background-color: #FFFFFF;
+  border: 1px solid var(--borde);
   padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-  max-width: 780px;
+  max-width: 900px;
   margin: 0 auto;
 }
 

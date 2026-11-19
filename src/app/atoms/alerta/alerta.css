@@ -1,20 +1,5 @@
-:host {
-    display: block;
-    margin-top: 16px;
-}
+:host { display: block; margin-top: 16px; }
 
-.alerta {
-    font-size: 13.5px;
-    border-radius: 8px;
-    padding: 10px 12px;
-}
-
-.alerta-error {
-    color: #B3261E;
-    background-color: #FDEDEC;
-}
-
-.alerta-exito {
-    color: #1E7E34;
-    background-color: #E6F4EA;
-}
+.alerta { font-size: 13.5px; padding: 12px 16px; border-left: 3px solid; }
+.alerta-error { color: #750E13; background-color: var(--error-fondo); border-color: var(--error); }
+.alerta-exito { color: #0E6027; background-color: var(--exito-fondo); border-color: var(--exito); }

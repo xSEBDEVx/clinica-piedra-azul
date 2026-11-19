@@ -1,58 +1,17 @@
-.citaPacientes {
-    background-color: #FFFFFF;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 460px;
-    margin: 20px auto;
-}
+.titulo-form { text-align: center; margin-bottom: 8px; }
+.subtitulo-form { text-align: center; margin-bottom: 32px; }
 
-.titulo-form {
-    color: #005092;
-    text-align: center;
-    margin-bottom: 10px;
-}
+.formularioCita { display: flex; flex-direction: column; gap: 20px; }
+app-alerta { margin-top: 0; }
 
-.subtitulo-form {
-    color: #666;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 14px;
-}
+.conOjo { position: relative; }
+.conOjo input { padding-right: 48px; }
+.ojo { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; display: flex; color: #525252; }
+.ojo svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-.formularioCita {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+.enlace-registro { margin-top: 24px; text-align: center; font-size: 13.5px; }
+.enlace-registro a { font-weight: 500; text-decoration: none; }
+.enlace-registro a:hover { text-decoration: underline; }
 
-/* El flex del formulario ya separa con gap; la alerta no necesita margen propio. */
-app-alerta {
-    margin-top: 0;
-}
-
-.enlace-registro {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 13.5px;
-    color: #5F6368;
-}
-
-.enlace-registro a {
-    color: #0081C6;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.enlace-registro a:hover {
-    text-decoration: underline;
-}
-
-.confirmacion {
-    text-align: center;
-}
-
-.confirmacion .titulo-form {
-    color: #1E7E34;
-}
+.confirmacion { text-align: center; }
+.confirmacion .titulo-form { color: var(--exito); }

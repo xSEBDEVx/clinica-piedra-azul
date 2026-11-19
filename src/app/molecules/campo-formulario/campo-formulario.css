@@ -6,29 +6,10 @@
 
 label {
     font-size: 14px;
-    font-weight: 500;
-    color: #3C4043;
-}
-
-/* Los controles se proyectan desde la página, por eso ::ng-deep. */
-:host ::ng-deep input,
-:host ::ng-deep select {
-    padding: 12px;
-    border: 1px solid #DADCE0;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    background-color: #F9F9F9;
-}
-
-:host ::ng-deep input:focus,
-:host ::ng-deep select:focus {
-    outline: none;
-    border-color: #0081C6;
-    background-color: #FFFFFF;
+    color: var(--texto);
 }
 
 :host ::ng-deep .error-campo {
     font-size: 12.5px;
-    color: #B3261E;
+    color: var(--error);
 }

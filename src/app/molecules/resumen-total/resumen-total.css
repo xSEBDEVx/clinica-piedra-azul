@@ -1,17 +1,5 @@
 :host {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  font-size: 14px;
-  color: #3C4043;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; font-size: 14px; color: var(--texto);
 }
-
-.totalBadge {
-  background-color: #E8F0FE;
-  color: #005092;
-  padding: 6px 14px;
-  border-radius: 16px;
-  font-weight: 600;
-  font-size: 13px;
-}
+.totalBadge { background-color: #D0E2FF; color: #0043CE; padding: 4px 12px; border-radius: 12px; font-weight: 500; font-size: 13px; }
